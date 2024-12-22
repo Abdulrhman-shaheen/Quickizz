@@ -29,14 +29,14 @@ function Buttons() {
         </h1>
         <div className="flex flex-col gap-4 items-center">
           <Link
-            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-xl-1 cursor-pointer bg-white w-60 font-medium"
+            className="visited:text-black flex justify-center rounded-lg px-3 py-5 border text-xl-1  bg-white w-60 font-medium text-black"
             to="/user"
           >
             {" "}
             Login as User{" "}
           </Link>
           <Link
-            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-xl-1 cursor-pointer bg-white w-60 font-medium mt-2 text-black"
+            className="visited:text-black flex justify-center rounded-lg px-3 py-5 border text-xl-1  bg-white w-60 font-medium text-black"
             to="/admin"
           >
             Login as Admin

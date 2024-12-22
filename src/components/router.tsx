@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import Buttons from "./Button.jsx";
-import User from "./user.jsx";
-import Admin from "./admin.jsx";
+import Buttons from "./button";
+import User from "./user";
+import Admin from "./admin";
 import { useLocation } from "react-router-dom";
 
 function Router() {
