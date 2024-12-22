@@ -39,7 +39,7 @@ function User() {
         </div>
         <div className="flex flex-col gap-2 justify-center items-center">
           <Link
-            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-base cursor-pointer bg-white w-60 font-medium text-black"
+            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-xl-1 cursor-pointer bg-white w-60 font-medium text-black"
             to="/userinter"
           >
             {" "}
