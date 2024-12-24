@@ -28,7 +28,7 @@ function Home() {
     >
       <div className="flex flex-col justify-center min-w-96 items-center text-2xl text-[#FFFFFF] gap-20 bg-black p-20 rounded-3xl border-[#302f2f] border">
         <h1 className="text-[#FFFFFF] text-6xl mb-4 text-center">
-          Welcome to <span>QUICKIZZ</span>
+          Welcome to <span className="font-outfit">QUICKIZZ</span>
         </h1>
         <div className="flex flex-col gap-4 items-center">
           <Link
