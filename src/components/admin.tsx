@@ -29,7 +29,7 @@ function Admin() {
     >
       <div className="flex flex-col justify-center items-center w-2/5 min-w-96 text-center text-2xl text-[#FFFFFF] gap-9 bg-black p-8 rounded-3xl border-[#302f2f] border">
         <h1 className="text-[#FFFFFF] text-6xl mb-6"> Welcome Lecturer </h1>
-        <form className="flex flex-col gap-3" onSubmit={(e) => handleSubmit(e, "http://localhost:5000/login")}>
+        <form className="flex flex-col gap-3" onSubmit={(e) => handleSubmit(e, "http://localhost:5000/loginlecturer")}>
           <input
             className="rounded-xl border-[#302f2f] border text-white gap-2 w-60 cursor-text font-medium bg-black min-w-80 px-3 py-5 text-base"
             type="text"
