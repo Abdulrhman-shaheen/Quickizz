@@ -23,8 +23,20 @@ export const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, url: str
         const result = await response.json();
         console.log("Success:", result);
         console.log(StatusCodes[result.good]);
-      } else {
-        console.error("Failed to submit form:", response.status);
+        
+        switch(url){
+          case "http://localhost:5000/signup":
+            window.location.href = '/';
+            break;
+          case "http://localhost:5000/loginlecturer":
+            window.location.href = '/user/lectureinter';
+            break;
+          case "http://localhost:5000/loginstudent":
+            window.location.href = '/user/userinter';
+            break;
+          default:
+            window.location.href = '/';
+        }
       }
     } catch (error) {
       console.error("Error submitting form:", error);
