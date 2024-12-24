@@ -16,14 +16,17 @@ function Admin() {
       }}
       initial="initial"
       animate="final"
+      transition={{ duration: 0.3 }}
       onAnimationComplete={() => {
         localStorage.setItem(
           "animation",
           previousAnimation === "-100vh" ? "100vh" : "-100vh"
         );
+        document.querySelector("body")?.classList.remove("overflow-hidden")
       }}
+      onAnimationStart={() => {document.querySelector("body")?.classList.add("overflow-hidden")}}
     >
-      <div className="flex flex-col justify-center items-center w-2/5 text-2xl text-[#FFFFFF] gap-9 bg-black p-10 rounded-3xl border-[#302f2f] border">
+      <div className="flex flex-col justify-center items-center w-2/5 min-w-96 text-center text-2xl text-[#FFFFFF] gap-9 bg-black p-10 rounded-3xl border-[#302f2f] border">
         <h1 className="text-[#FFFFFF] text-6xl mb-6"> Welcome Lecturer </h1>
         <div className="flex flex-col gap-3">
           <input
