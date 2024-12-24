@@ -5,6 +5,7 @@ import User from "./user";
 import Admin from "./admin";
 import UserInter from "./userinter";
 import Error from "./error"
+import Signup from "./signup";
 import { useLocation } from "react-router-dom";
 
 function Router() {
@@ -16,6 +17,7 @@ function Router() {
         <Route path="/user" element={<User />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/user/userinter" element={<UserInter />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Error />} /> 
       </Routes>
     </AnimatePresence>

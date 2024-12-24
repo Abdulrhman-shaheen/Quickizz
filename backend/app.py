@@ -3,16 +3,12 @@ from flask_cors import CORS, cross_origin
 from argon2 import PasswordHasher
 from enum import IntEnum
 from db_wrapper import DB_manager
-
+from statuscodes import create_codes
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 
-class ResponseCode(IntEnum):
-    EMPTY_FIELD = 0
-    USER_CREATED = 1
-    USER_NAME_EXISTS = 2
-    WRONG_CREDS = 3
+StatusCodes = create_codes()
 
 
 ph = PasswordHasher()
@@ -26,7 +22,7 @@ def signup():
     request_data = request.get_json()
 
     if request_data["username"] == "" or request_data["password"] == "":
-        return jsonify({"good": ResponseCode.EMPTY_FIELD})
+        return jsonify({"good": StatusCodes['EMPTY_FIELD']})
 
     if db["users"].find_one({"username": request_data["username"]}) == None:
         db["users"].insert_one(
@@ -36,9 +32,9 @@ def signup():
                 "sessions": [],
             }
         )
-        return jsonify({"good": ResponseCode.USER_CREATED})
+        return jsonify({"good": StatusCodes['USER_CREATED']})
     else:
-        return jsonify({"good": ResponseCode.USER_NAME_EXISTS})
+        return jsonify({"good": StatusCodes['USER_NAME_EXISTS']})
 
 
 @app.route("/login", methods=["POST"])
@@ -57,12 +53,22 @@ def login():
                     "username": request_data["username"],
                 }
             )["password"],
-            request_data["password"]
+            request_data["password"],
         )
-        return jsonify({"good": ResponseCode.USER_CREATED})
+        return jsonify({"good": StatusCodes['USER_CREATED']})
     except:
-        return jsonify({"good": ResponseCode.WRONG_CREDS})
+        return jsonify({"good": StatusCodes['WRONG_CREDS']})
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# @app.route("/test", methods=["POST"])
+# @cross_origin()
+# def test():
+#     request_data = request.get_json()
+#     print(request_data)
+
+#     return jsonify({"good": StatusCodes['WRONG_CREDS']})
+
+
+
+# if __name__ == "__main__":
+#     app.run(debug=True)
