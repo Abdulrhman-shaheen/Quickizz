@@ -1,6 +1,7 @@
 {
     "EMPTY_FIELD": 0,
     "USER_CREATED": 1,
-    "USER_NAME_EXISTS": 2,
-    "WRONG_CREDS": 3
+    "SUCCESS_LOGIN": 2,
+    "USER_NAME_EXISTS": 3,
+    "WRONG_CREDS": 4
 }

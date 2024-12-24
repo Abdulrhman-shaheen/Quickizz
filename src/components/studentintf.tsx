@@ -1,7 +1,7 @@
 import QuestionsTransition from "./questiontransition";
 import {useState} from "react";
 
-function UserInter() {
+function StudentIntf() {
     let [quiz, setQuiz] = useState<string[]>([]);
   return (
     <div>
@@ -21,4 +21,4 @@ function UserInter() {
   );
 }
 
-export default UserInter;
+export default StudentIntf;

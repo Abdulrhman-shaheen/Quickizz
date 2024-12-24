@@ -11,11 +11,11 @@ export const handleSubmit = async (
 ) => {
   e.preventDefault(); // Prevent default form submission
   // object to specify where to redirect after successful login
-
+  console.log(pathname);
   const redirectURLs: { [key: string]: string } = {
     "/signup": "/",
-    "/loginlecturer": "/user/lectureinter",
-    "/loginstudent": "/user/userinter",
+    "/lecturer": "/lecturer/interface",
+    "/student": "/student/interface",
   };
 
   const formData = {

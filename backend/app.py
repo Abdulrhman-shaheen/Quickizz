@@ -4,6 +4,7 @@ from argon2 import PasswordHasher
 from enum import IntEnum
 from db_wrapper import DB_manager
 from statuscodes import create_codes
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -15,33 +16,7 @@ ph = PasswordHasher()
 db = DB_manager()
 
 
-@app.route("/signup", methods=["POST"])
-@cross_origin()
-def signup():
-
-    request_data = request.get_json()
-
-    if request_data["username"] == "" or request_data["password"] == "":
-        return jsonify({"good": StatusCodes['EMPTY_FIELD']})
-
-    if db["users"].find_one({"username": request_data["username"]}) == None:
-        db["users"].insert_one(
-            {
-                "username": request_data["username"],
-                "password": ph.hash(request_data["password"]),
-                "sessions": [],
-            }
-        )
-        return jsonify({"good": StatusCodes['USER_CREATED']})
-    else:
-        return jsonify({"good": StatusCodes['USER_NAME_EXISTS']})
-
-
-@app.route("/login", methods=["POST"])
-@cross_origin()
-def login():
-
-    request_data = request.get_json()
+def handle_login(request_data):
 
     if request_data["username"] == "" or request_data["password"] == "":
         return jsonify({"good": 0})
@@ -55,9 +30,46 @@ def login():
             )["password"],
             request_data["password"],
         )
-        return jsonify({"good": StatusCodes['USER_CREATED']})
+        return jsonify({"good": StatusCodes["SUCCESS_LOGIN"]})
     except:
-        return jsonify({"good": StatusCodes['WRONG_CREDS']})
+        return jsonify({"good": StatusCodes["WRONG_CREDS"]})
+
+
+@app.route("/signup", methods=["POST"])
+@cross_origin()
+def signup():
+
+    request_data = request.get_json()
+
+    if request_data["username"] == "" or request_data["password"] == "":
+        return jsonify({"good": StatusCodes["EMPTY_FIELD"]})
+
+    if db["users"].find_one({"username": request_data["username"]}) == None:
+        db["users"].insert_one(
+            {
+                "username": request_data["username"],
+                "password": ph.hash(request_data["password"]),
+                "sessions": [],
+            }
+        )
+        return jsonify({"good": StatusCodes["USER_CREATED"]})
+    else:
+        return jsonify({"good": StatusCodes["USER_NAME_EXISTS"]})
+
+
+@app.route("/loginstudent", methods=["POST"])
+@cross_origin()
+def loginstudent():
+    request_data = request.get_json()
+    return handle_login(request_data)
+
+
+@app.route("/loginlecturer", methods=["POST"])
+@cross_origin()
+def loginlecturer():
+
+    request_data = request.get_json()
+    return handle_login(request_data)
 
 
 # @app.route("/test", methods=["POST"])
@@ -67,7 +79,6 @@ def login():
 #     print(request_data)
 
 #     return jsonify({"good": StatusCodes['WRONG_CREDS']})
-
 
 
 # if __name__ == "__main__":

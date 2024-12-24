@@ -15,7 +15,7 @@ class DB_manager:
             self.client = MongoClient()
             self.db = self.client.get_database("my_db")
             self.collections = {}
-
+    
     def __getitem__(self, collection_name):
 
         try:
