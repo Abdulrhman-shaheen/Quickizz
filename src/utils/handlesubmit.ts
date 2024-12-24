@@ -29,10 +29,10 @@ export const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, url: str
             window.location.href = '/';
             break;
           case "http://localhost:5000/loginlecturer":
-            window.location.href = '/user/userinter';
+            window.location.href = '/user/lectureinter';
             break;
           case "http://localhost:5000/loginstudent":
-            window.location.href = '/user/lectureinter';
+            window.location.href = '/user/userinter';
             break;
           default:
             window.location.href = '/';
