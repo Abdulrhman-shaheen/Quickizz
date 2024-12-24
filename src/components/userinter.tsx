@@ -1,5 +1,6 @@
-import QuestionsTransition from "./quiz";
+import QuestionsTransition from "./questiontransition";
 import {useState} from "react";
+
 function UserInter() {
     let [quiz, setQuiz] = useState<string[]>([]);
   return (
