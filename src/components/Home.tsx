@@ -32,17 +32,17 @@ function Home() {
         </h1>
         <div className="flex flex-col gap-4 items-center">
           <Link
-            className="visited:text-black flex justify-center rounded-lg px-3 py-5 border text-xl-1  bg-white w-60 font-medium text-black"
+            className="visited:text-black hover:bg-gray-200 flex justify-center rounded-lg px-3 py-5 border text-xl-1  bg-white w-60 font-medium text-black"
             to="/user"
           >
             {" "}
-            Login as User{" "}
+            Login as Student{" "}
           </Link>
           <Link
-            className="visited:text-black flex justify-center rounded-lg px-3 py-5 border text-xl-1  bg-white w-60 font-medium text-black"
+            className="visited:text-black hover:bg-gray-200 flex justify-center rounded-lg px-3 py-5 border text-xl-1  bg-white w-60 font-medium text-black"
             to="/admin"
           >
-            Login as Admin
+            Login as Lecturer
           </Link>
         </div>
       </div>

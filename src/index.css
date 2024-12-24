@@ -2,11 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .content-attr-letters {
+    content: attr(data-letters);
+  }
+}
 
 :root {
-    background-color: black;
-    color: white;
-    font-family: 'Roboto', sans-serif;
-    overflow: auto;
+  background-color: black;
+  color: white;
+  font-family: "Roboto", sans-serif;
+  overflow: auto;
 }
-  

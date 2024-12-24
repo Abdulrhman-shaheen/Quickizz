@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import Home from "./home";
+import Home from "./Home";
 import User from "./user";
 import Admin from "./admin";
 import UserInter from "./userinter";

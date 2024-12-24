@@ -1,7 +1,7 @@
 import {motion} from "framer-motion";
 import { FC } from "react";
 
-const Quiz: FC <React.PropsWithChildren> = ({children}) =>{
+const QuestionsTransition: FC <React.PropsWithChildren> = ({children}) =>{
     return(
         <motion.div className="border-white border-2 rounded-lg p-4 m-4 flex flex-col items-center justify-center text-white"
         initial = {{y: "100vh", opacity: 0}}
@@ -17,4 +17,4 @@ const Quiz: FC <React.PropsWithChildren> = ({children}) =>{
     )
 };
 
-export default Quiz;
+export default QuestionsTransition;
