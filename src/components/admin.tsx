@@ -16,15 +16,18 @@ function Admin() {
       }}
       initial="initial"
       animate="final"
+      transition={{ duration: 0.3 }}
       onAnimationComplete={() => {
         localStorage.setItem(
           "animation",
           previousAnimation === "-100vh" ? "100vh" : "-100vh"
         );
+        document.querySelector("body")?.classList.remove("overflow-hidden")
       }}
+      onAnimationStart={() => {document.querySelector("body")?.classList.add("overflow-hidden")}}
     >
-      <div className="flex flex-col justify-center items-center w-1/3 text-2xl text-[#FFFFFF] gap-8 bg-black p-10 rounded-3xl border-[#302f2f] border">
-        <h1 className="text-[#FFFFFF] text-6xl mb-6"> Welcome Admin </h1>
+      <div className="flex flex-col justify-center items-center w-2/5 min-w-96 text-center text-2xl text-[#FFFFFF] gap-9 bg-black p-10 rounded-3xl border-[#302f2f] border">
+        <h1 className="text-[#FFFFFF] text-6xl mb-6"> Welcome Lecturer </h1>
         <div className="flex flex-col gap-3">
           <input
             className="rounded-3xl border-[#302f2f] border text-white gap-2 w-60 cursor-text font-medium bg-black min-w-80 px-3 py-5 text-base"
@@ -39,7 +42,7 @@ function Admin() {
         </div>
         <div className="flex flex-col gap-2 justify-center items-center">
           <Link
-            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-base cursor-pointer bg-white w-60 font-medium"
+            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-xl-1 cursor-pointer bg-white w-60 font-medium text-black"
             to="/admininter"
           >
             {" "}

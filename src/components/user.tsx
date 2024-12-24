@@ -5,7 +5,7 @@ function User() {
   const previousAnimation = localStorage.getItem("animation") || "100vh";
   return (
     <motion.div
-      className="box-border h-screen w-screen flex flex-col justify-center items-center"
+      className="absolute box-border h-screen w-screen flex flex-col justify-center items-center"
       variants={{
         initial: {
           x: previousAnimation,
@@ -16,15 +16,18 @@ function User() {
       }}
       initial="initial"
       animate="final"
+      transition={{ duration: 0.3 }}
       onAnimationComplete={() => {
         localStorage.setItem(
           "animation",
           previousAnimation === "-100vh" ? "100vh" : "-100vh"
         );
+        document.querySelector("body")?.classList.remove("overflow-hidden")
       }}
+      onAnimationStart={() => {document.querySelector("body")?.classList.add("overflow-hidden")}}
     >
-      <div className="flex flex-col justify-center items-center w-1/3  text-2xl text-[#FFFFFF] gap-9 bg-black p-10 rounded-3xl border-[#302f2f] border">
-        <h1 className="text-[#FFFFFF] text-6xl mb-6"> Welcome User </h1>
+      <div className="flex flex-col justify-center items-center w-2/5 min-w-96 text-2xl text-[#FFFFFF] gap-9 bg-black p-10 rounded-3xl border-[#302f2f] border">
+        <h1 className="text-[#FFFFFF] text-6xl mb-6 text-center"> Welcome Student </h1>
         <div className="flex flex-col gap-3">
           <input
             className="rounded-3xl border-[#302f2f] border text-white gap-2 w-60 cursor-text font-medium bg-black min-w-80 px-3 py-5 text-base"
@@ -39,8 +42,8 @@ function User() {
         </div>
         <div className="flex flex-col gap-2 justify-center items-center">
           <Link
-            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-base cursor-pointer bg-white w-60 font-medium text-black"
-            to="/userinter"
+            className="visited:text-black no-underline flex justify-center rounded-lg px-3 py-5 border text-xl-1 cursor-pointer bg-white w-60 font-medium text-black"
+            to="/user/userinter"
           >
             {" "}
             Login{" "}
