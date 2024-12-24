@@ -30,13 +30,6 @@ class DB_manager:
             return collection
 
     def add_collection(self, collection_name):
-        # write good docstrings that defines input and output
-        """
-        Saves a collection object to the collections dictionary and can be accessed by the collection name
-        :param collection_name: str
-        :param collection: collection object
-        :return: None
-        """
         self.collections[collection_name] = self[collection_name]
 
     def get_db(self):
