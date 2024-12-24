@@ -7,7 +7,7 @@ function User() {
 <PageTransition>
       <div className="flex flex-col justify-center items-center w-2/5 min-w-96 text-2xl text-[#FFFFFF] gap-9 bg-black p-8 rounded-3xl border-[#302f2f] border">
         <h1 className="text-[#FFFFFF] text-6xl mb-6 text-center"> Welcome Student </h1>
-        <form className="space-y-7 flex gap-3 flex-col items-center" onSubmit={(e) => handleSubmit(e, "http://localhost:5000/login")} >
+        <form className="space-y-7 flex gap-3 flex-col items-center" onSubmit={(e) => handleSubmit(e, "http://localhost:5000/loginstudent")} >
         <div className="flex flex-col gap-3">
           <input
             className="rounded-xl border-[#302f2f] border text-white gap-2 min-w-80 cursor-text font-medium bg-black p-4 text-base"
