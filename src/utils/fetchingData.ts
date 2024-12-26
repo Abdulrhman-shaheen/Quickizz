@@ -1,6 +1,8 @@
 import {useState, useEffect} from "react";
 
-export const fetchingData = (url:string) => {
+export const fetchingData = (
+  url:string) => {
+  
 let [data, setData] = useState<{[key: string]: string }[]>([]);
 
   useEffect(() => {

@@ -5,9 +5,21 @@ import { fetchingData } from "../utils/fetchingData";
 function Question({ question }: { question: { [key: string]: string } }) {
   let [submited, setSubmited] = useState(false);
   let [selceted, setSelected] = useState<string>("");
+  let [showMessage, setShowMessage] = useState(false);
+
+  const counterVisualizer = () => {
+    setShowMessage(true);
+  };
 
   let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/counters`);
 
+  const counter = (value: string) => {
+    const match = data.find((item) => item.objectID === question.objectID); // Use find instead of map
+    if (match) {
+      return showMessage && <span className="">{match[value]}</span>;
+    }
+    return;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSelected(e.target.value);
@@ -31,13 +43,22 @@ function Question({ question }: { question: { [key: string]: string } }) {
           alert("Please select an answer");
           return;
         }
-        submitChoice(e, `${import.meta.env.VITE_BACKEND_URL}/counter`, question.objectID);
+        submitChoice(
+          e,
+          `${import.meta.env.VITE_BACKEND_URL}/counter`,
+          question.objectID
+        );
         setSubmited(true);
+        counterVisualizer();
       }}
     >
-      <p>{question["question"]}</p>
-      <div className="flex flex-col w-full items-start gap-3 pl-1">
-        <label className={"min-w-full border rounded-lg p-2 " + newClass("a")}>
+      <div className="flex flex-col w-full items-start gap-4 pl-1">
+        <p>{question["question"]}</p>
+        <label
+          className={
+            " flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("a")
+          }
+        >
           <input
             onChange={handleChange}
             disabled={submited}
@@ -47,8 +68,9 @@ function Question({ question }: { question: { [key: string]: string } }) {
             className={"align-middle " + newClass("a")}
           />
           {question["a"]}
+          {counter("a")}
         </label>
-        <label className={"min-w-full border rounded-lg p-2 " + newClass("b")}>
+        <label className={"flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("b")}>
           <input
             onChange={handleChange}
             disabled={submited}
@@ -58,8 +80,9 @@ function Question({ question }: { question: { [key: string]: string } }) {
             className={"align-middle " + newClass("b")}
           />
           {question["b"]}
+          {counter("b")}
         </label>
-        <label className={"min-w-full border rounded-lg p-2 " + newClass("c")}>
+        <label className={" flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("c")}>
           <input
             onChange={handleChange}
             disabled={submited}
@@ -69,8 +92,9 @@ function Question({ question }: { question: { [key: string]: string } }) {
             className={"align-middle " + newClass("c")}
           />
           {question["c"]}
+          {counter("c")}
         </label>
-        <label className={"min-w-full border rounded-lg p-2 " + newClass("d")}>
+        <label className={"flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("d")}>
           <input
             onChange={handleChange}
             disabled={submited}
@@ -80,6 +104,7 @@ function Question({ question }: { question: { [key: string]: string } }) {
             className="align-middle"
           />
           {question["d"]}
+          {counter("d")}
         </label>
       </div>
       <button
