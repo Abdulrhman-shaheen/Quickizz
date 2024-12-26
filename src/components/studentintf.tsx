@@ -3,15 +3,17 @@ import { useState, useEffect } from "react";
 import Question from "./question";
 
 function StudentIntf() {
-  let [data, setData] = useState<{ [key: string]: string }[]>([{
-    "sess_id": "1",
-    "question": "Which planet is known as the Red Planet?",
-    "a": "Earth",
-    "b": "Mars",
-    "c": "Jupiter",
-    "d": "Saturn",
-    "correct": "b"
-  }]);
+  let [data, setData] = useState<{ [key: string]: string }[]>([
+    {
+      sess_id: "1",
+      question: "Which planet is known as the Red Planet?",
+      a: "Earth",
+      b: "Mars",
+      c: "Jupiter",
+      d: "Saturn",
+      correct: "b",
+    },
+  ]);
 
   // useEffect(() => {
   //   fetchInfo();
@@ -47,9 +49,9 @@ function StudentIntf() {
         </div>
       </header>
       <div className="flex flex-col items-center">
-        {data.map((questions, i) => (
+        {data.map((questions) => (
           <QuestionsTransition key={questions.question}>
-           <Question question={questions} key={questions.question}/>
+            <Question question={questions} key={questions.question} />
           </QuestionsTransition>
         ))}
       </div>

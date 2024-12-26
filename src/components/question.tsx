@@ -18,7 +18,17 @@ function Question({ question }: { question: { [key: string]: string } }) {
   };
 
   return (
-    <form className="flex flex-col items-start p-1">
+    <form
+      className="flex flex-col items-start p-1"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (selceted === "") {
+          alert("Please select an answer");
+          return;
+        }
+        setSubmited(true);
+      }}
+    >
       <p>{question["question"]}</p>
       <div className="flex flex-col w-full items-start gap-3 pl-1">
         <label className={"min-w-full border rounded-lg p-2 " + newClass("a")}>
@@ -61,17 +71,12 @@ function Question({ question }: { question: { [key: string]: string } }) {
             type="radio"
             name="Choices"
             value="d"
-            
             className="align-middle"
           />
           {question["d"]}
         </label>
       </div>
       <button
-        onClick={() => {
-        if(selceted === "") {alert("Please select an answer"); return;}
-        setSubmited(true);
-        }}
         disabled={submited}
         type="submit"
         className="bg-white text-base flex justify-center font-semibold shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 text-black py-1 px-2 rounded-lg ml-1 mt-8 disabled:bg-gray-400"
