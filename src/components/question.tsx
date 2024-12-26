@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { submitChoice } from "../utils/submitchoice";
+import { fetchingData } from "../utils/fetchingData";
 
 function Question({ question }: { question: { [key: string]: string } }) {
   let [submited, setSubmited] = useState(false);
   let [selceted, setSelected] = useState<string>("");
+
+  let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/counters`);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSelected(e.target.value);
@@ -26,6 +31,7 @@ function Question({ question }: { question: { [key: string]: string } }) {
           alert("Please select an answer");
           return;
         }
+        submitChoice(e, `${import.meta.env.VITE_BACKEND_URL}/counter`, question.objectID);
         setSubmited(true);
       }}
     >
