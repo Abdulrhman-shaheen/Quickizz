@@ -1,5 +1,5 @@
 import { handleSubmit } from "../utils/handlesubmit.ts";
-import { data, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function Signup() {

@@ -44,7 +44,7 @@ function StudentIntf() {
         </div>
       </header>
       <div className="flex flex-col items-center">
-        {tempdata.map((questions) => (
+        {data.map((questions) => (
           <QuestionsTransition key={questions.objectID}>
             <Question question={questions} key={questions.question} />
           </QuestionsTransition>

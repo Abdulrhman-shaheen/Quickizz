@@ -12,11 +12,13 @@ function Question({ question }: { question: { [key: string]: string } }) {
   };
 
   let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/counters`);
+  console.log(data) ;
+  
 
   const counter = (value: string) => {
     const match = data.find((item) => item.objectID === question.objectID); // Use find instead of map
     if (match) {
-      return showMessage && <span className="">{match[value]}</span>;
+      return showMessage && <span className="text-white">{match[value]}</span>;
     }
     return;
   };
@@ -45,7 +47,7 @@ function Question({ question }: { question: { [key: string]: string } }) {
         }
         submitChoice(
           e,
-          `${import.meta.env.VITE_BACKEND_URL}/counter`,
+          `${import.meta.env.VITE_BACKEND_URL}/counters`,
           question.objectID
         );
         setSubmited(true);
