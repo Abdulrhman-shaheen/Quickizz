@@ -1,3 +1,4 @@
+import path from "path";
 import StatusCode from "../statuscodes.json";
 const StatusCodes = Object.fromEntries(
   Object.entries(StatusCode).map(([key, value]) => [value, key])
@@ -10,8 +11,11 @@ export const handleSubmit = async (
   navigator: (s: string) => void
 ) => {
   e.preventDefault(); // Prevent default form submission
-  // object to specify where to redirect after successful login
-  // console.log(pathname);
+  
+  if(pathname.at(-1) == "/"){
+    pathname = pathname.slice(0, -1);  
+  }
+  
   const redirectURLs: { [key: string]: string } = {
     "/signup": "/",
     "/lecturer": "/lecturer/home",
@@ -19,7 +23,6 @@ export const handleSubmit = async (
   };
 
   let formData: { [key: string]: string | undefined } = {};
-
   switch (pathname) {
     case "/signup":
       formData = {
@@ -36,8 +39,11 @@ export const handleSubmit = async (
         password: (e.target as HTMLFormElement).password.value,
       };
       break;
+    default:
+      break;
   }
 
+  // console.log(formData);
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -49,7 +55,7 @@ export const handleSubmit = async (
 
     if (response.ok) {
       const result = await response.json();
-      // console.log(StatusCodes[result.good]);
+      console.log(StatusCodes[result.good]);
       // console.log(redirectURLs[pathname]);
       if (StatusCodes[result.good] === "USER_CREATED" || StatusCodes[result.good] === "SUCCESS_LOGIN") {
         navigator(redirectURLs[pathname]);
