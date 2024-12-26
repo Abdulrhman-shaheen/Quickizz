@@ -7,24 +7,38 @@ export const handleSubmit = async (
   e: React.FormEvent<HTMLFormElement>,
   url: string,
   pathname: string,
-  navigator : (s : string) => void
+  navigator: (s: string) => void
 ) => {
   e.preventDefault(); // Prevent default form submission
   // object to specify where to redirect after successful login
-  console.log(pathname);
+  // console.log(pathname);
   const redirectURLs: { [key: string]: string } = {
     "/signup": "/",
     "/lecturer": "/lecturer/home",
     "/student": "/student/home",
   };
 
-  const formData = {
-    username: (e.target as HTMLFormElement).username.value,
-    password: (e.target as HTMLFormElement).password.value,
-  };
+  let formData: { [key: string]: string | undefined } = {};
+
+  switch (pathname) {
+    case "/signup":
+      formData = {
+        username: (e.target as HTMLFormElement).username.value,
+        password: (e.target as HTMLFormElement).password.value,
+        firstname: (e.target as HTMLFormElement).firstname.value,
+        lastname: (e.target as HTMLFormElement).lastname.value,
+      };
+      break;
+    case "/lecturer":
+    case "/student":
+      formData = {
+        username: (e.target as HTMLFormElement).username.value,
+        password: (e.target as HTMLFormElement).password.value,
+      };
+      break;
+  }
 
   try {
-    
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -35,9 +49,13 @@ export const handleSubmit = async (
 
     if (response.ok) {
       const result = await response.json();
-      console.log(StatusCodes[result.good]);
-      console.log(redirectURLs[pathname]);
-      navigator(redirectURLs[pathname]);
+      // console.log(StatusCodes[result.good]);
+      // console.log(redirectURLs[pathname]);
+      if (StatusCodes[result.good] === "USER_CREATED" || StatusCodes[result.good] === "SUCCESS_LOGIN") {
+        navigator(redirectURLs[pathname]);
+      }
+      return StatusCodes[result.good];
+
     }
   } catch (error) {
     console.error("Error submitting form:", error);
