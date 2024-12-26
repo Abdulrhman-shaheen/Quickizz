@@ -1,27 +1,29 @@
 import QuestionsTransition from "./questiontransition";
 import Question from "./question";
 import {fetchingData} from "../utils/fetchingData";
+import {useState} from "react";
 
 function StudentIntf() {
-  let tempdata = 
-    [{_id: "As5d5dd98d",
-      sess_id: "1",
-      question: "Which planet is known as the Red Planet?",
-      a: "Earth",
-      b: "Mars",
-      c: "Jupiter",
-      d: "Saturn",
-      correct: "b",
-    }];
 
-  
+  let [score, setScore] = useState(0);
+
+  // let tempdata = 
+  //   [{_id: "As5d5dd98d",
+  //     sess_id: "1",
+  //     question: "Which planet is known as the Red Planet?",
+  //     a: "Earth",
+  //     b: "Mars",
+  //     c: "Jupiter",
+  //     d: "Saturn",
+  //     correct: "b",
+  //   }];
   /*
   This is the data that will be fetched from the backend, 
   **tempdata** is just to test on the page, this can be deleted 
   after setting the backend.
   */
   let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/questions`);
-  let score = 0;
+
   let total = data.length;
   let login_data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/login`);
   return (
@@ -47,7 +49,7 @@ function StudentIntf() {
       <div className="flex flex-col mt-5 gap-2 items-center">
         {data.map((questions) => (
           <QuestionsTransition key={questions._id}>
-            <Question question={questions} key={questions._id} />
+            <Question question={questions} setScore={setScore} key={questions._id} />
           </QuestionsTransition>
         ))}
       </div>
