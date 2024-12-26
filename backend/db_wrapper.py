@@ -1,4 +1,9 @@
-from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+import dotenv
+
+env = dotenv.dotenv_values(r"..\.env") 
+
 
 
 class DB_manager:
@@ -12,7 +17,7 @@ class DB_manager:
     def __init__(self):
         if not hasattr(self, "initialized"):
             self.initialized = True
-            self.client = MongoClient()
+            self.client = client = MongoClient(env["DATABASE_URL"], server_api=ServerApi("1"))
             self.db = self.client.get_database("my_db")
             self.collections = {}
     
