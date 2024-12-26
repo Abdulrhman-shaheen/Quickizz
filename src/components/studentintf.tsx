@@ -4,7 +4,7 @@ import {fetchingData} from "../utils/fetchingData";
 
 function StudentIntf() {
   let tempdata = 
-    [{objectID: "As5d5dd98d",
+    [{_id: "As5d5dd98d",
       sess_id: "1",
       question: "Which planet is known as the Red Planet?",
       a: "Earth",
@@ -45,9 +45,9 @@ function StudentIntf() {
         </div>
       </header>
       <div className="flex flex-col mt-5 gap-2 items-center">
-        {tempdata.map((questions) => (
-          <QuestionsTransition key={questions.objectID}>
-            <Question question={questions} key={questions.question} />
+        {data.map((questions) => (
+          <QuestionsTransition key={questions._id}>
+            <Question question={questions} key={questions._id} />
           </QuestionsTransition>
         ))}
       </div>

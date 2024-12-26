@@ -2,7 +2,10 @@ import { useState } from "react";
 import { submitChoice } from "../utils/submitchoice";
 import { fetchingData } from "../utils/fetchingData";
 
-function Question({ question }: { question: { [key: string]: string } }, score:number) {
+function Question(
+  { question }: { question: { [key: string]: string } },
+  score: number
+) {
   let [submited, setSubmited] = useState(false);
   let [selceted, setSelected] = useState<string>("");
   let [showMessage, setShowMessage] = useState(false);
@@ -12,12 +15,13 @@ function Question({ question }: { question: { [key: string]: string } }, score:n
   };
 
   const Label = () => {
-    return !submited ? "hover:bg-white/15 hover:duration-300 cursor-pointer" : "";
+    return !submited
+      ? "hover:bg-white/15 hover:duration-300 cursor-pointer"
+      : "";
   };
 
   let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/counters`);
   console.log(data);
-
   let precentage = 0;
   let total = 0;
   const counter = (value: string) => {
@@ -29,14 +33,16 @@ function Question({ question }: { question: { [key: string]: string } }, score:n
         parseInt(item.b, 10);
       precentage = (parseInt(item[value], 10) / total) * 100;
     });
-    const match = data.find((item) => item.objectID === question.objectID); // Use find instead of map
+    const match = data.find((item) => item._id === question._id); // Use find instead of map
     if (match) {
       return (
         showMessage && (
-          <div className="flex flex-row items-center gap-3">
+          <div className="flex flex-row items-center gap-3 ">
             <span className="text-white text-base">{match[value]}</span>
-            <span className="text-white text-2xl">{precentage}</span>
-          </div> 
+            <span className="text-white text-base ">
+              {precentage.toFixed(2)}%
+            </span>
+          </div>
         )
       );
     }
@@ -69,106 +75,42 @@ function Question({ question }: { question: { [key: string]: string } }, score:n
         submitChoice(
           e,
           `${import.meta.env.VITE_BACKEND_URL}/counters`,
-          question.objectID
+          question._id
         );
         setSubmited(true);
         counterVisualizer();
       }}
     >
-      <div className="flex flex-col w-full items-start gap-4 pl-1">
+      <div className="flex flex-col w-full items-start gap-4 pl-1 ">
         <p>{question["question"]}</p>
-        <label
-          className={
-            Label() +
-            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
-            newClass("a")
-          }
-        >
-          <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
-          <input
-            onChange={handleChange}
-            disabled={submited}
-            type="radio"
-            name="Choices"
-            value="a"
-            className="peer hidden"
-          />
-           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
-           ">
-           </div>
-          </div>  
-          {question["a"]}
-          {counter("a")}
-        </label>
-        <label
-          className={
-            Label() +
-            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
-            newClass("b")
-          }
-        >
-         <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
-          <input
-            onChange={handleChange}
-            disabled={submited}
-            type="radio"
-            name="Choices"
-            value="b"
-            className="peer hidden"
-          />
-           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
-           ">
-           </div>
-          </div>  
-          {question["b"]}
-          {counter("b")}
-        </label>
-        <label
-          className={
-            Label() +
-            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
-            newClass("c")
-          }
-        >
-         <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
-          <input
-            onChange={handleChange}
-            disabled={submited}
-            type="radio"
-            name="Choices"
-            value="c"
-            className="peer hidden"
-          />
-           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
-           ">
-           </div>
-          </div>  
-          {question["c"]}
-          {counter("c")}
-        </label>
-        <label
-          className={
-            Label() +
-            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
-            newClass("d")
-          }
-        >
-          <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
-          <input
-            onChange={handleChange}
-            disabled={submited}
-            type="radio"
-            name="Choices"
-            value="d"
-            className="peer hidden"
-          />
-           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
-           ">
-           </div>
-          </div>  
-          {question["d"]}
-          {counter("d")}
-        </label>
+
+        {["a", "b", "c", "d"].map((choice) => (
+          <label
+            className={
+              Label() +
+              " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
+              newClass(choice)
+            }
+            key={choice}
+          >
+            <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
+              <input
+                onChange={handleChange}
+                disabled={submited}
+                type="radio"
+                name="Choices"
+                value={choice}
+                className="peer hidden"
+              />
+
+              <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white"></div>
+            </div>
+            <span className="mr-auto">
+            {question[choice]}
+            </span>
+            {counter(choice)}
+          </label>
+        ))}
       </div>
       <button
         disabled={submited}

@@ -1,19 +1,18 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
-export const fetchingData = (
-  url:string) => {
-  
-let [data, setData] = useState<{[key: string]: string }[]>([]);
+export const fetchingData = (url: string) => {
+  let [data, setData] = useState<{ [key: string]: string }[]>([]);
 
   useEffect(() => {
     fetchInfo();
   }, []);
 
-  const fetchInfo = () => {
-    return fetch(url)
-      .then((res) => res.json())
-      .then((d) => setData(d));
+
+  const fetchInfo = async () => {
+    const response = await fetch(url);
+    const result = (await response.json()) as { [key: string]: string }[];
+    setData(result);
   };
 
   return data;
-}
+};
