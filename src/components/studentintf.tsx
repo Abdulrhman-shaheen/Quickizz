@@ -1,10 +1,10 @@
 import QuestionsTransition from "./questiontransition";
-import { useState, useEffect } from "react";
 import Question from "./question";
+import {fetchingData} from "../utils/fetchingData";
 
 function StudentIntf() {
-  let [data, setData] = useState<{ [key: string]: string }[]>([
-    {
+  let tempdata = 
+    [{objectID: "As5d5dd98d",
       sess_id: "1",
       question: "Which planet is known as the Red Planet?",
       a: "Earth",
@@ -12,20 +12,15 @@ function StudentIntf() {
       c: "Jupiter",
       d: "Saturn",
       correct: "b",
-    },
-  ]);
+    }];
 
-  // useEffect(() => {
-  //   fetchInfo();
-  // }, []);
 
-  // const fetchInfo = () => {
-  //   const url = "https://jsonplaceholder.typicode.com/users";
-
-  //   return fetch(url)
-  //     .then((res) => res.json())
-  //     .then((d) => setData(d));
-  // };
+  /*
+  This is the data that will be fetched from the backend, 
+  **tempdata** is just to test on the page, this can be deleted 
+  after setting the backend.
+  */
+  let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/questions`);
 
   let score = 0;
   let total = 0;
@@ -49,8 +44,8 @@ function StudentIntf() {
         </div>
       </header>
       <div className="flex flex-col items-center">
-        {data.map((questions) => (
-          <QuestionsTransition key={questions.question}>
+        {tempdata.map((questions) => (
+          <QuestionsTransition key={questions.objectID}>
             <Question question={questions} key={questions.question} />
           </QuestionsTransition>
         ))}
