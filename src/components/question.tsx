@@ -2,7 +2,7 @@ import { useState } from "react";
 import { submitChoice } from "../utils/submitchoice";
 import { fetchingData } from "../utils/fetchingData";
 
-function Question({ question }: { question: { [key: string]: string } }) {
+function Question({ question }: { question: { [key: string]: string } }, score:number) {
   let [submited, setSubmited] = useState(false);
   let [selceted, setSelected] = useState<string>("");
   let [showMessage, setShowMessage] = useState(false);
@@ -11,14 +11,34 @@ function Question({ question }: { question: { [key: string]: string } }) {
     setShowMessage(true);
   };
 
-  let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/counters`);
-  console.log(data) ;
-  
+  const Label = () => {
+    return !submited ? "hover:bg-white/15 hover:duration-300 cursor-pointer" : "";
+  };
 
+  let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/counters`);
+  console.log(data);
+
+  let precentage = 0;
+  let total = 0;
   const counter = (value: string) => {
+    data.forEach((item) => {
+      total =
+        parseInt(item.a, 10) +
+        parseInt(item.b, 10) +
+        parseInt(item.b, 10) +
+        parseInt(item.b, 10);
+      precentage = (parseInt(item[value], 10) / total) * 100;
+    });
     const match = data.find((item) => item.objectID === question.objectID); // Use find instead of map
     if (match) {
-      return showMessage && <span className="text-white">{match[value]}</span>;
+      return (
+        showMessage && (
+          <div className="flex flex-row items-center gap-3">
+            <span className="text-white text-base">{match[value]}</span>
+            <span className="text-white text-2xl">{precentage}</span>
+          </div> 
+        )
+      );
     }
     return;
   };
@@ -28,9 +48,10 @@ function Question({ question }: { question: { [key: string]: string } }) {
   const newClass = (option: string) => {
     if (submited) {
       if (option === question.correct) {
-        return "bg-green-500";
+        score++;
+        return "border-4 rounded-xl border-green-500/90 duration-200";
       } else if (option === selceted && option !== question.correct) {
-        return "bg-red-500";
+        return "border-4 rounded-xl border-red-500 duration-200";
       }
     }
     return "";
@@ -58,53 +79,93 @@ function Question({ question }: { question: { [key: string]: string } }) {
         <p>{question["question"]}</p>
         <label
           className={
-            " flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("a")
+            Label() +
+            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
+            newClass("a")
           }
         >
+          <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
           <input
             onChange={handleChange}
             disabled={submited}
             type="radio"
             name="Choices"
             value="a"
-            className={"align-middle " + newClass("a")}
+            className="peer hidden"
           />
+           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
+           ">
+           </div>
+          </div>  
           {question["a"]}
           {counter("a")}
         </label>
-        <label className={"flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("b")}>
+        <label
+          className={
+            Label() +
+            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
+            newClass("b")
+          }
+        >
+         <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
           <input
             onChange={handleChange}
             disabled={submited}
             type="radio"
             name="Choices"
             value="b"
-            className={"align-middle " + newClass("b")}
+            className="peer hidden"
           />
+           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
+           ">
+           </div>
+          </div>  
           {question["b"]}
           {counter("b")}
         </label>
-        <label className={" flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("c")}>
+        <label
+          className={
+            Label() +
+            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
+            newClass("c")
+          }
+        >
+         <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
           <input
             onChange={handleChange}
             disabled={submited}
             type="radio"
             name="Choices"
             value="c"
-            className={"align-middle " + newClass("c")}
+            className="peer hidden"
           />
+           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
+           ">
+           </div>
+          </div>  
           {question["c"]}
           {counter("c")}
         </label>
-        <label className={"flex flex-row gap-2 min-w-full border rounded-lg p-2 " + newClass("d")}>
+        <label
+          className={
+            Label() +
+            " flex flex-row items-center gap-2 min-w-full border rounded-lg p-2 " +
+            newClass("d")
+          }
+        >
+          <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
           <input
             onChange={handleChange}
             disabled={submited}
             type="radio"
             name="Choices"
             value="d"
-            className="align-middle"
+            className="peer hidden"
           />
+           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white
+           ">
+           </div>
+          </div>  
           {question["d"]}
           {counter("d")}
         </label>
@@ -112,7 +173,7 @@ function Question({ question }: { question: { [key: string]: string } }) {
       <button
         disabled={submited}
         type="submit"
-        className="bg-white text-base flex justify-center font-semibold shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 text-black py-1 px-2 rounded-lg ml-1 mt-8 disabled:bg-gray-400"
+        className="bg-white text-base flex justify-center font-semibold shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 text-black py-1 px-2 rounded-lg ml-1 mt-6 disabled:bg-gray-400"
       >
         submit
       </button>
