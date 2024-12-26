@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, make_response
 from flask_cors import CORS, cross_origin
 from argon2 import PasswordHasher
 from enum import IntEnum
@@ -8,12 +8,7 @@ from statuscodes import create_codes
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-
 StatusCodes = create_codes()
-
-
-import enum
-
 
 ph = PasswordHasher()
 db = DB_manager()
@@ -63,10 +58,15 @@ def signup():
 
 
 @app.route("/login", methods=["POST"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def loginlecturer():
     request_data = request.get_json()
-    return handle_login(request_data)
+    resp = make_response(handle_login(request_data))
+    resp.set_cookie("username", request_data["username"])
+    return resp
+
+
+    
 
 
 @app.route("/counters", methods=["GET"])

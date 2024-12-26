@@ -50,8 +50,8 @@ export const handleSubmit = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
+      credentials: "include",
     });
-
     if (response.ok) {
       const result = await response.json();
       console.log(StatusCodes[result.good]);
