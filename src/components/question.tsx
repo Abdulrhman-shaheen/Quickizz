@@ -2,10 +2,13 @@ import { useState } from "react";
 import { submitChoice } from "../utils/submitchoice";
 import { fetchingData } from "../utils/fetchingData";
 
-function Question(
-  { question }: { question: { [key: string]: string } },
-  score: number
-) {
+function Question({
+  question,
+  setScore,
+}: {
+  question: { [key: string]: string };
+  setScore: (fn: (s: number) => number) => void;
+}) {
   let [submited, setSubmited] = useState(false);
   let [selceted, setSelected] = useState<string>("");
   let [showMessage, setShowMessage] = useState(false);
@@ -33,7 +36,7 @@ function Question(
         parseInt(item.b, 10);
       precentage = (parseInt(item[value], 10) / total) * 100;
     });
-    const match = data.find((item) => item._id === question._id); // Use find instead of map
+    const match = data.find((item) => item._id === question._id);
     if (match) {
       return (
         showMessage && (
@@ -54,7 +57,7 @@ function Question(
   const newClass = (option: string) => {
     if (submited) {
       if (option === question.correct) {
-        score++;
+        setScore((s) => s + 1);
         return "border-4 rounded-xl border-green-500/90 duration-200";
       } else if (option === selceted && option !== question.correct) {
         return "border-4 rounded-xl border-red-500 duration-200";
@@ -105,9 +108,7 @@ function Question(
 
               <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white"></div>
             </div>
-            <span className="mr-auto">
-            {question[choice]}
-            </span>
+            <span className="mr-auto">{question[choice]}</span>
             {counter(choice)}
           </label>
         ))}
