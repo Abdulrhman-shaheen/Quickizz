@@ -4,7 +4,7 @@ import {fetchingData} from "../utils/fetchingData";
 
 function StudentIntf() {
   let tempdata = 
-    [{objectID: "objectID1",
+    [{objectID: "As5d5dd98d",
       sess_id: "1",
       question: "Which planet is known as the Red Planet?",
       a: "Earth",
