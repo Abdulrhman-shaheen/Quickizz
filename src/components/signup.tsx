@@ -20,7 +20,7 @@ function Signup() {
       home,
       navigate
     );
-    if (result == "USER_EXISTS") {
+    if (result == "USER_NAME_EXISTS") {
       updateError("Username already exists");
     }
   };

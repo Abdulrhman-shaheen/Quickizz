@@ -17,7 +17,7 @@ function Student() {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       const result = await handleSubmit(
         e,
-        `${import.meta.env.VITE_BACKEND_URL}/loginlecturer`,
+        `${import.meta.env.VITE_BACKEND_URL}/login`,
         home,
         navigate
       );

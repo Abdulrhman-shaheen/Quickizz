@@ -1,4 +1,3 @@
-import path from "path";
 import StatusCode from "../statuscodes.json";
 const StatusCodes = Object.fromEntries(
   Object.entries(StatusCode).map(([key, value]) => [value, key])

@@ -62,17 +62,9 @@ def signup():
         return jsonify({"good": StatusCodes["USER_NAME_EXISTS"]})
 
 
-@app.route("/loginstudent", methods=["POST"])
-@cross_origin()
-def loginstudent():
-    request_data = request.get_json()
-    return handle_login(request_data)
-
-
-@app.route("/loginlecturer", methods=["POST"])
+@app.route("/login", methods=["POST"])
 @cross_origin()
 def loginlecturer():
-
     request_data = request.get_json()
     return handle_login(request_data)
 
