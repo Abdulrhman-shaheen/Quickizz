@@ -14,8 +14,8 @@ export const handleSubmit = async (
   console.log(pathname);
   const redirectURLs: { [key: string]: string } = {
     "/signup": "/",
-    "/lecturer": "/lecturer/interface",
-    "/student": "/student/interface",
+    "/lecturer": "/lecturer/home",
+    "/student": "/student/home",
   };
 
   const formData = {
