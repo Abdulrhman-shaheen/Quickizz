@@ -34,7 +34,7 @@ def handle_login(request_data):
 
 
 @app.route("/signup", methods=["POST"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def signup():
 
     request_data = request.get_json()
