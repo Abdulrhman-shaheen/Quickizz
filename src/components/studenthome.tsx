@@ -11,14 +11,13 @@ function StudentHome() {
     if (document.cookie == "") {
       navigate("/");
     }
-  });
+    const fetchData = async () => {
+      const result = await getUser(
+        `${import.meta.env.VITE_BACKEND_URL}/getuser`
+      );
+      setUser(result);
+    };
 
-  const fetchData = async () => {
-    const result = await getUser(`${import.meta.env.VITE_BACKEND_URL}/getuser`);
-    setUser(result);
-  };
-
-  useEffect(() => {
     fetchData();
   }, []);
 
