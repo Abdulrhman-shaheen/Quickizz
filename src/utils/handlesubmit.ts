@@ -30,6 +30,29 @@ export const handleSubmit = async (
         firstname: (e.target as HTMLFormElement).firstname.value,
         lastname: (e.target as HTMLFormElement).lastname.value,
       };
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          console.log(StatusCodes[result.good]);
+          
+          if (StatusCodes[result.good] === "USER_CREATED"){
+            navigator(redirectURLs[pathname]);
+          }
+          return StatusCodes[result.good];
+    
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+
       break;
     case "/lecturer":
     case "/student":
@@ -37,32 +60,33 @@ export const handleSubmit = async (
         username: (e.target as HTMLFormElement).username.value,
         password: (e.target as HTMLFormElement).password.value,
       };
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+          credentials: "include",
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          console.log(StatusCodes[result.good]);
+          // console.log(redirectURLs[pathname]);
+          if (StatusCodes[result.good] === "SUCCESS_LOGIN") {
+            navigator(redirectURLs[pathname]);
+          }
+          return StatusCodes[result.good];
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
       break;
     default:
       break;
   }
 
   // console.log(formData);
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-      credentials: "include",
-    });
-    if (response.ok) {
-      const result = await response.json();
-      console.log(StatusCodes[result.good]);
-      // console.log(redirectURLs[pathname]);
-      if (StatusCodes[result.good] === "USER_CREATED" || StatusCodes[result.good] === "SUCCESS_LOGIN") {
-        navigator(redirectURLs[pathname]);
-      }
-      return StatusCodes[result.good];
 
-    }
-  } catch (error) {
-    console.error("Error submitting form:", error);
-  }
 };
