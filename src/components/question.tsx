@@ -2,11 +2,21 @@ import { useState } from "react";
 import { submitChoice } from "../utils/submitchoice";
 import { fetchingData } from "../utils/fetchingData";
 import { QuestionIntf } from "../types/question";
+import { Choices } from "../types/choices";
+import {sessionAnswers} from "../types/sessionAnswers";
 
-function Question({question, setScore,}: {question: QuestionIntf, setScore: (fn: (s: number) => number) => void;}){
+function Question({question, setScore, sess_id}: {question: QuestionIntf, setScore: () => void, sess_id: string}) {
   let [submited, setSubmited] = useState(false);
-  let [selceted, setSelected] = useState<string>("");
+  let [selected, setSelected] = useState<string>("");
   let [showMessage, setShowMessage] = useState(false);
+
+  let answers = fetchingData<Choices>(`${import.meta.env.VITE_BACKEND_URL}/quizzes`);
+  
+  if (answers && answers["answers"] && answers["answers"][question["_id"]] !== undefined) {
+    setSubmited(true);
+    setSelected(answers ? String(answers["answers"][question["_id"]]) : "");
+    setShowMessage(true);
+  }
 
   const counterVisualizer = () => {
     setShowMessage(true);
@@ -18,19 +28,25 @@ function Question({question, setScore,}: {question: QuestionIntf, setScore: (fn:
       : "";
   };
 
-  let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/counters`);
-  console.log(data);
+  let sessionAnswers = fetchingData<sessionAnswers>(`${import.meta.env.VITE_BACKEND_URL}/sessionanswers`);
+  
+  console.log(sessionAnswers);
+  
+  
   let precentage = 0;
   let total = 0;
+
   const counter = (value: string) => {
-    data.forEach((item) => {
+    
+    sessionAnswers.forEach((item) => {
       total =
         parseInt(item.a, 10) +
         parseInt(item.b, 10) +
-        parseInt(item.b, 10) +
-        parseInt(item.b, 10);
+        parseInt(item.c, 10) +
+        parseInt(item.d, 10);
       precentage = (parseInt(item[value], 10) / total) * 100;
     });
+
     const match = data.find((item) => item._id === question._id);
     if (match) {
       return (
@@ -49,12 +65,13 @@ function Question({question, setScore,}: {question: QuestionIntf, setScore: (fn:
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSelected(e.target.value);
+
+  
   const newClass = (option: string) => {
     if (submited) {
       if (option === question.correct) {
-        setScore((s) => s + 1);
         return "border-4 rounded-xl border-green-500/90 duration-200";
-      } else if (option === selceted && option !== question.correct) {
+      } else if (option === selected && option !== question.correct) {
         return "border-4 rounded-xl border-red-500 duration-200";
       }
     }
@@ -66,7 +83,7 @@ function Question({question, setScore,}: {question: QuestionIntf, setScore: (fn:
       className="flex flex-col items-start p-1"
       onSubmit={(e) => {
         e.preventDefault();
-        if (selceted === "") {
+        if (selected === "") {
           alert("Please select an answer");
           return;
         }
@@ -75,6 +92,9 @@ function Question({question, setScore,}: {question: QuestionIntf, setScore: (fn:
           `${import.meta.env.VITE_BACKEND_URL}/counters`,
           question._id
         );
+        if (selected === question.correct) {
+          setScore();
+        }
         setSubmited(true);
         counterVisualizer();
       }}

@@ -66,16 +66,30 @@ def loginlecturer():
     return resp
 
 
-    
 @app.route("/getuser", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def get_user():
     username = request.cookies.get("username")
     print(username)
-    print("-------------------------------------------------------------------------------------------------------------------------------------")
-    user = db["users"].find_one({"username" : username})
+    print(
+        "-------------------------------------------------------------------------------------------------------------------------------------"
+    )
+    user = db["users"].find_one({"username": username})
     user["_id"] = str(user["_id"])
     return jsonify(user)
+
+
+@app.route("/questions", methods=["GET"])
+@cross_origin()
+def questions():
+    sess_id = request.args.get("sess_id", default=1, type=int)
+    dbquestions = db["questions"].find({"sess_id": int(sess_id)})
+    questions = []
+    for question in dbquestions:
+        question["_id"] = str(question["_id"])
+        questions.append(question)
+
+    return jsonify(questions)
 
 
 @app.route("/counters", methods=["GET"])
@@ -90,24 +104,35 @@ def counters_GET():
     return jsonify(choices)
 
 
-@app.route("/counters", methods=["POST"])
+@app.route("/sessionanswers", methods=["POST"])
 @cross_origin()
-def counters_POST():
+def sess_answers():
     request_data = request.get_json()
+    
+    {
+            "objectID": self.id,
+            "a": self.count_a,
+            "b": self.count_b,
+            "c": self.count_c,
+            "d": self.count_d,
+        }
     return jsonify({"good": 1})
 
 
-@app.route("/questions", methods=["GET"])
+@app.route("/choices", methods=["POST"])
 @cross_origin()
-def questions():
-    sess_id = request.args.get("sess_id", default=1, type=int)
-    dbquestions = db["questions"].find({"sess_id": int(sess_id)})
-    questions = []
-    for question in dbquestions:
-        question["_id"] = str(question["_id"])
-        questions.append(question)
-
-    return jsonify(questions)
+def choices():
+    request_data = request.get_json()
+    
+    try:
+        sess_id = int(request_data["sess_id"])
+        username = str(request_data["username"])
+    except KeyError:
+        return jsonify({"good": 0})
+    
+    choices = db["quizzes"].find_one({"sess_id": sess_id}, {"username": username})
+    choices["_id"] = str(choices["_id"])
+    return jsonify(choices)
 
 
 # @app.route("/test", methods=["GET"])

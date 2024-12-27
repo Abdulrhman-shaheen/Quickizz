@@ -5,20 +5,32 @@ import { useState, useEffect } from "react";
 import { getUser } from "../utils/getUser";
 import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
+import { Choices } from "../types/choices";
+import { scoreUpdate } from "../utils/scoreUpdate";
 import { QuestionIntf } from "../types/question";
 
 function StudentIntf() {
-  let [score, setScore] = useState(0);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  let [newscore, setNewScore] = useState(0);
 
-  const params = useParams();
-
-  let ses_id = params["sess_id"];
-
-  if (Number.isNaN(Number(ses_id))) {
+  let sess_id = useParams()["sess_id"];
+  if (Number.isNaN(Number(sess_id))) {
     navigate("/student/home");
   }
+
+  let choices = fetchingData<Choices>(
+    `${import.meta.env.VITE_BACKEND_URL}/choices`,
+    { sess_id: sess_id, username: user ? user.username : "" }
+  );
+  let score = choices ? parseInt(choices["score"]) : 0;
+  let _id = choices ? choices["_id"] : "";
+
+  const setScore = () => {
+    let tempscore = newscore + 1;
+    scoreUpdate(`${import.meta.env.VITE_BACKEND_URL}/quizzes`, tempscore, _id);
+    setNewScore(tempscore);
+  };
 
   useEffect(() => {
     if (document.cookie == "") {
@@ -49,8 +61,10 @@ function StudentIntf() {
   **tempdata** is just to test on the page, this can be deleted 
   after setting the backend.
   */
-  let data = fetchingData<QuestionIntf[]>(`${import.meta.env.VITE_BACKEND_URL}/questions`);
-  
+  let data = fetchingData<QuestionIntf[]>(
+    `${import.meta.env.VITE_BACKEND_URL}/questions`
+  );
+
   let total = data ? data.length : 0;
 
   return (
@@ -82,15 +96,20 @@ function StudentIntf() {
         </div>
       </header>
       <div className="flex flex-col mt-5 gap-2 items-center">
-        {data.map((questions) => (
-          <QuestionsTransition key={questions._id}>
-            <Question
-              question={questions}
-              setScore={setScore}
-              key={questions._id}
-            />
-          </QuestionsTransition>
-        ))}
+        {data ? (
+          data.map((question) => (
+            <QuestionsTransition key={question._id}>
+              <Question
+                question={question}
+                setScore={setScore}
+                key={question._id}
+                sess_id={sess_id ? sess_id : ""}
+              />
+            </QuestionsTransition>
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
       </div>
     </div>
   );
