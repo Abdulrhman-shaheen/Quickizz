@@ -33,6 +33,7 @@ function Router() {
         
         <Route path="/signup" element={<Signup />} />
         <Route path="/student/interface/:sess_id" element={<StudentIntf />} />
+        <Route path="/lecturer/interface/:sess_id" element={<LecturerIntf />} />
 
         <Route path="*" element={<Error />} /> 
       </Routes>
