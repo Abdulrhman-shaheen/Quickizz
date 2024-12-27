@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 
-function Dialogue({ toggle, navigate }: { toggle: () => void, navigate: any }) {
+function Dialogue({ toggle, navigate, userType }: { toggle: () => void, navigate: any, userType: String }) {
 
   const handleEnterLogic = (): void => {
    // TODO
     /* request to db to modify user quiz list */
-    navigate(`/student/interface/${sess_id}`);
+    navigate(`/${userType}/interface/${sess_id}`);
   };
 
   let [sess_id, setSess_id] = useState(0);  
