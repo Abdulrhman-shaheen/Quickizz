@@ -100,7 +100,8 @@ def counters_POST():
 @app.route("/questions", methods=["GET"])
 @cross_origin()
 def questions():
-    dbquestions = db["questions"].find({"sess_id": 1})
+    sess_id = request.args.get("sess_id", default=1, type=int)
+    dbquestions = db["questions"].find({"sess_id": int(sess_id)})
     questions = []
     for question in dbquestions:
         question["_id"] = str(question["_id"])

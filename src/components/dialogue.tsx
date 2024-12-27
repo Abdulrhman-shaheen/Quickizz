@@ -4,6 +4,8 @@ import { useState } from "react";
 function Dialogue({ toggle, navigate }: { toggle: () => void, navigate: any }) {
 
   const handleEnterLogic = (): void => {
+   // TODO
+    /* request to db to modify user quiz list */
     navigate(`/student/interface/${sess_id}`);
   };
 

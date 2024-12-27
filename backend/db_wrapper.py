@@ -17,7 +17,7 @@ class DB_manager:
     def __init__(self):
         if not hasattr(self, "initialized"):
             self.initialized = True
-            self.client = client = MongoClient(env["DATABASE_URL"], server_api=ServerApi("1"))
+            self.client = MongoClient(env["DATABASE_URL"], server_api=ServerApi("1"))
             self.db = self.client.get_database("my_db")
             self.collections = {}
     
