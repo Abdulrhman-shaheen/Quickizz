@@ -9,6 +9,8 @@ module.exports = {
     extend: {
       fontFamily: {
         outfit: ['Outfit', 'sans-serif'],
+        inter: ["Inter", "sans-serif"],
+
       },
     },
   },
