@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-export const fetchingData = (url: string) => {
-  let [data, setData] = useState<{ [key: string]: string }[]>([]);
+export const  fetchingData = <T>(url: string) => {
+  let [data, setData] = useState<T>();
 
   useEffect(() => {
     fetchInfo();
@@ -10,7 +10,7 @@ export const fetchingData = (url: string) => {
 
   const fetchInfo = async () => {
     const response = await fetch(url);
-    const result = (await response.json()) as { [key: string]: string }[];
+    const result = (await response.json()) as T;
     setData(result);
   };
 
