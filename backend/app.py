@@ -67,6 +67,15 @@ def loginlecturer():
 
 
     
+@app.route("/getuser", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def get_user():
+    username = request.cookies.get("username")
+    print(username)
+    print("-------------------------------------------------------------------------------------------------------------------------------------")
+    user = db["users"].find_one({"username" : username})
+    user["_id"] = str(user["_id"])
+    return jsonify(user)
 
 
 @app.route("/counters", methods=["GET"])
