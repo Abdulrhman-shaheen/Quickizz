@@ -43,13 +43,14 @@ function Student() {
               type="text"
               placeholder="Username"
               name="username"
+              required={true}
             />
             <input
               className="rounded-xl border-[#302f2f] border text-white gap-2 w-full cursor-text font-medium bg-black p-4 text-base"
               type="password"
               placeholder="Password"
               name="password"
-
+              required={true}
             />
           </div>
           <div className="flex flex-col gap-2 justify-center items-center">
