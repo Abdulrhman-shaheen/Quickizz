@@ -48,7 +48,7 @@ function StudentHome() {
         <button onClick={() => toggleDialog()} className="bg-white hover:bg-gray-300  text-black font-bold py-2 px-4 rounded-full transform transition-transform duration-600 hover:rotate-180">
           +
         </button>
-        {dialogOpen && (<Dialogue toggle={toggleDialog} />
+        {dialogOpen && (<Dialogue toggle={toggleDialog} navigate={navigate} />
 )}
 
       </div>

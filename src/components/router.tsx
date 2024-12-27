@@ -32,6 +32,8 @@ function Router() {
         <Route path="/lecturer/interface" element={<LecturerIntf />} />
         
         <Route path="/signup" element={<Signup />} />
+        <Route path="/student/interface/:sess_id" element={<StudentIntf />} />
+
         <Route path="*" element={<Error />} /> 
       </Routes>
     </AnimatePresence>

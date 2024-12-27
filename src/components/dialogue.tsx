@@ -1,5 +1,13 @@
-function Dialogue({ toggle }: { toggle: () => void }) {
-  const handleEnterLogic = (): void => {};
+import { useState } from "react";
+
+
+function Dialogue({ toggle, navigate }: { toggle: () => void, navigate: any }) {
+
+  const handleEnterLogic = (): void => {
+    navigate(`/student/interface/${sess_id}`);
+  };
+
+  let [sess_id, setSess_id] = useState(0);  
 
   return (
     <div
@@ -27,8 +35,9 @@ function Dialogue({ toggle }: { toggle: () => void }) {
           <input
             id="session-id"
             className="rounded-xl border-[#302f2f] border text-white w-full font-medium bg-black p-4 text-base focus:outline-none focus:ring-2 focus:ring-white mb-4"
-            type="number"
+            type="text"
             placeholder="Session ID"
+            onChange={(e) => setSess_id(Number(e.target.value))}
           />
 
           <button
