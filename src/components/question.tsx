@@ -7,11 +7,19 @@ function Question({
   setScore,
 }: {
   question: { [key: string]: string };
-  setScore: (fn: (s: number) => number) => void;
+  setScore: (flag:boolean) => void;
 }) {
   let [submited, setSubmited] = useState(false);
-  let [selceted, setSelected] = useState<string>("");
+  let [selected, setSelected] = useState<string>("");
   let [showMessage, setShowMessage] = useState(false);
+
+  let answers = fetchingData<answers>(`${import.meta.env.VITE_BACKEND_URL}/quizzes`);
+
+  if (answers["answers"][question["_id"]] !== undefined) {
+    setSubmited(true);
+    setSelected(answers["answers"][question["_id"]]);
+    setShowMessage(true);
+  }
 
   const counterVisualizer = () => {
     setShowMessage(true);
@@ -57,9 +65,10 @@ function Question({
   const newClass = (option: string) => {
     if (submited) {
       if (option === question.correct) {
-        setScore((s) => s + 1);
+        setScore(true);
         return "border-4 rounded-xl border-green-500/90 duration-200";
-      } else if (option === selceted && option !== question.correct) {
+      } else if (option === selected && option !== question.correct) {
+        setScore(false);
         return "border-4 rounded-xl border-red-500 duration-200";
       }
     }
@@ -71,7 +80,7 @@ function Question({
       className="flex flex-col items-start p-1"
       onSubmit={(e) => {
         e.preventDefault();
-        if (selceted === "") {
+        if (selected === "") {
           alert("Please select an answer");
           return;
         }

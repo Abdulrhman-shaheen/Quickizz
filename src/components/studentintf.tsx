@@ -5,19 +5,27 @@ import { useState, useEffect } from "react";
 import { getUser } from "../utils/getUser";
 import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
+import { answers } from "../types/answers";
+import {scoreUpdate} from "../utils/scoreUpdate";
 
 function StudentIntf() {
-  let [score, setScore] = useState(0);
+
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-
+  let [newscore, setNewScore] = useState(0);
   const params = useParams();
 
   let ses_id = params["sess_id"];
-
+  let score = fetchingData<answers>(`${import.meta.env.VITE_BACKEND_URL}/quizzes`);
   if (Number.isNaN(Number(ses_id))) {
     navigate("/student/home");
   }
+
+  const setScore = (flag:boolean) => {
+    let tempscore = flag ? newscore + 1 : newscore - 1;
+    scoreUpdate(`${import.meta.env.VITE_BACKEND_URL}/quizzes`, tempscore, score["_id"]);
+    setNewScore(tempscore);
+  };
 
   useEffect(() => {
     if (document.cookie == "") {
@@ -64,7 +72,7 @@ function StudentIntf() {
           </h1>
 
           <p className="text-white flex items-center">
-            Score: {score}/{total}
+            Score: {score["score"]}/{total}
           </p>
           <button
             onClick={() => {
