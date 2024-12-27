@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { getUser } from "../utils/getUser";
 import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
+import { QuestionIntf } from "../types/question";
 
 function StudentIntf() {
   let [score, setScore] = useState(0);
@@ -48,8 +49,10 @@ function StudentIntf() {
   **tempdata** is just to test on the page, this can be deleted 
   after setting the backend.
   */
-  let data = fetchingData(`${import.meta.env.VITE_BACKEND_URL}/questions`);
-  let total = data.length;
+  let data = fetchingData<QuestionIntf[]>(`${import.meta.env.VITE_BACKEND_URL}/questions`);
+  
+  let total = data ? data.length : 0;
+
   return (
     <div>
       <header className="border-b-2 text-black text-2xl p-6">

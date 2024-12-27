@@ -1,14 +1,9 @@
 import { useState } from "react";
 import { submitChoice } from "../utils/submitchoice";
 import { fetchingData } from "../utils/fetchingData";
+import { QuestionIntf } from "../types/question";
 
-function Question({
-  question,
-  setScore,
-}: {
-  question: { [key: string]: string };
-  setScore: (fn: (s: number) => number) => void;
-}) {
+function Question({question, setScore,}: {question: QuestionIntf, setScore: (fn: (s: number) => number) => void;}){
   let [submited, setSubmited] = useState(false);
   let [selceted, setSelected] = useState<string>("");
   let [showMessage, setShowMessage] = useState(false);
@@ -87,7 +82,7 @@ function Question({
       <div className="flex flex-col w-full items-start gap-4 pl-1 ">
         <p>{question["question"]}</p>
 
-        {["a", "b", "c", "d"].map((choice) => (
+        {(["a", "b", "c", "d"] as const).map((choice) => (
           <label
             className={
               Label() +
