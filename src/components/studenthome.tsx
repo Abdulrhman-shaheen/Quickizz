@@ -6,6 +6,13 @@ import { useNavigate } from "react-router-dom";
 function StudentHome() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (document.cookie == "") {
+      navigate("/");
+    }
+  });
+
   const fetchData = async () => {
     const result = await getUser(`${import.meta.env.VITE_BACKEND_URL}/getuser`);
     setUser(result);
