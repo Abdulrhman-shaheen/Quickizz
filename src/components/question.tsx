@@ -7,7 +7,7 @@ function Question({
   setScore,
 }: {
   question: { [key: string]: string };
-  setScore: (flag:boolean) => void;
+  setScore: () => void;
 }) {
   let [submited, setSubmited] = useState(false);
   let [selected, setSelected] = useState<string>("");
@@ -62,13 +62,13 @@ function Question({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSelected(e.target.value);
+
+  
   const newClass = (option: string) => {
     if (submited) {
       if (option === question.correct) {
-        setScore(true);
         return "border-4 rounded-xl border-green-500/90 duration-200";
       } else if (option === selected && option !== question.correct) {
-        setScore(false);
         return "border-4 rounded-xl border-red-500 duration-200";
       }
     }
@@ -89,6 +89,9 @@ function Question({
           `${import.meta.env.VITE_BACKEND_URL}/counters`,
           question._id
         );
+        if (selected === question.correct) {
+          setScore();
+        }
         setSubmited(true);
         counterVisualizer();
       }}

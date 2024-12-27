@@ -21,8 +21,8 @@ function StudentIntf() {
     navigate("/student/home");
   }
 
-  const setScore = (flag:boolean) => {
-    let tempscore = flag ? newscore + 1 : newscore - 1;
+  const setScore = () => {
+    let tempscore = newscore + 1;
     scoreUpdate(`${import.meta.env.VITE_BACKEND_URL}/quizzes`, tempscore, score["_id"]);
     setNewScore(tempscore);
   };

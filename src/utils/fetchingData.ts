@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export const fetchingData = (url: string) => {
-  let [data, setData] = useState<{ [key: string]: string }[]>([]);
+  let [data, setData] = useState<T>([]);
 
   useEffect(() => {
     fetchInfo();
