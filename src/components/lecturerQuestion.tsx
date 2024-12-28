@@ -72,6 +72,7 @@ function LecturerQuestion () {
 
     return (
         <>
+        <h2 className="text-2xl mb-4" style={{ display : isSubmitted ? "none" : "block" }}> Create a new question </h2>
     <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
                     Question:
@@ -120,6 +121,7 @@ function LecturerQuestion () {
                     Sumbit
                   </button>
                 </div>
+                <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-75 dark:via-neutral-400" />
                 </>
     ); }
 
