@@ -8,13 +8,14 @@ import { getUser } from "../utils/getUser";
 
 function LecturerIntf() {
 
-     const [user, setUser] = useState<User | null>(null);
-     const params = useParams();
-     let sess_id = params["sess_id"];
      const navigate = useNavigate();
+     const params = useParams();
+     const [user, setUser] = useState<User | null>(null);
      const [question, setQuestion] = useState("");
      const [answers, setAnswers] = useState(["", "", "", ""]);
      const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
+
+     let sess_id = params["sess_id"];
 
      useEffect(() => {
       if (document.cookie == "") {
@@ -44,27 +45,63 @@ function LecturerIntf() {
           const newAnswers = [...answers];
           newAnswers[index] = value;
           setAnswers(newAnswers);
-        };
+     };
 
      const handleCorrectAnswerChange = (index: number) => {
           setCorrectAnswer(index);
      };
 
+     // TODO: Handle in the backend
+     const sendDataToDB = async () => {
+          try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/add-question`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+               sess_id: sess_id,
+               question: question,
+               a: answers[0],
+               b: answers[1],
+               c: answers[2],
+               d: answers[3],
+               correct: transform_radio(correctAnswer),
+              }),
+            });
+            if (!response.ok) {
+              throw new Error("Failed to send data to the database");
+            }
+            const result = await response.json();
+            console.log(result);
+          } catch (error) {
+            console.error("Error:", error);
+          }
+     };
 
-     const handleNext = () => {
-          // TODO: Send the question, answers, and correct answer to the db
+     const handleNext = async (e: React.FormEvent) => {
+          e.preventDefault();
+          await sendDataToDB();
           // Reset the form for the next question
           setQuestion("");
           setAnswers(["", "", "", ""]);
           setCorrectAnswer(null);
-        };
+     };
       
-        const handleFinish = () => {
-          // TODO: Send the question, answers, and correct answer to the db
+      
+     const handleFinish = async (e: React.FormEvent) => {
+          e.preventDefault();
+          await sendDataToDB();
           navigate("/lecturer/home");
-        };
+     };
 
-     // TODO: Add a new quiz to the db with the given session ID
+
+     const transform_radio = (index: number | null) => {
+          if (index === 0) { return "a"; }
+          else if (index === 1) { return "b"; }
+          else if (index === 2) { return "c"; }
+          else if (index === 3) { return "d"; }
+     }
 
      return (
           <div>
