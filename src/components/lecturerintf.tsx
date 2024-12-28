@@ -68,25 +68,30 @@ function LecturerIntf() {
             old_questions.map((question) => (
             <LecturerQuestion key={question._id} old={true} oldQuestion={question} />
             ))
-          ) : (
+          ) : 
+          
+          (
             <p className="text-gray-400">No previous questions available</p>
           )}
 
 
 
           {questions.map((index) => (
-            <LecturerQuestion key={index} old={false} oldQuestion={null} />
+            <div>   <LecturerQuestion key={index} old={false} oldQuestion={null} />
+            <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-75 dark:via-neutral-400" /></div>
+         
           ))}
+          
           <div className="flex justify-between mt-4">
             <button
               onClick={handleNext}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-white hover:bg-white/15 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Next
             </button>
             <button
               onClick={handleFinish}
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-white hover:bg-white/15 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
               Finish
             </button>

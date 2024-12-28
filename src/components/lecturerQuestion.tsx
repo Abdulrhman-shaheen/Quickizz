@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { QuestionIntf } from "../types/question";
 import { io, Socket } from "socket.io-client";
+import QuestionsTransition from "./questiontransition";
 
 
 function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: QuestionIntf | null}) {
@@ -64,7 +65,7 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         await sendDataToDB();
-        
+
         socket?.emit("new_question", {
           sess_id: sess_id,
           question: question,
@@ -94,10 +95,10 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
       }
 
     return (
-        <>
-        <h2 className="text-2xl mb-4" style={{ display : isSubmitted ? "none" : "block" }}> Create a new question </h2>
+        <QuestionsTransition>
+        <h2 className="text-3xl text-center mb-4" style={{ display : isSubmitted ? "none" : "block" }}> Create a new question </h2>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block text-gray-400 text-xl font-bold mb-2">
               Question:
             </label>
             <input
@@ -105,7 +106,7 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
               onChange={handleQuestionChange}
               disabled={isSubmitted || old}
               value = {oldQuestion ? oldQuestion.question : question}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:text-white"
+              className="shadow appearance-none border rounded-xl w-full mb-7 py-8 px-3 text-white bg-transparent leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed "
             />
           </div>
 
@@ -113,7 +114,7 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
 
             {answers.map((answer, index) => (
               <div key={index} className="mb-2">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
+                <label className="block text-gray-400 text-sm font-bold mb-2">
                   Answer {index + 1}:
                 </label>
 
@@ -122,7 +123,7 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
                   value={oldQuestion ? oldQuestion[transform_radio(index) as keyof QuestionIntf] : answer}
                   onChange={(e) => handleAnswerChange(index, e.target.value)}
                   disabled={isSubmitted || old}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:text-white"
+                  className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-white bg-transparent leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed"
                 />
 
                 <label className="inline-flex items-center mt-2">
@@ -146,14 +147,13 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
             <button
               onClick={handleSubmit}
               disabled={isSubmitted || old}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:bg-gray-400"
+              className="bg-white hover:bg-white/15 mb-3 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:bg-gray-400"
             >
               Sumbit
             </button>
           </div>
-          <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-75 dark:via-neutral-400" />
           
-        </>
+        </QuestionsTransition>
     ); }
 
     export default LecturerQuestion;
