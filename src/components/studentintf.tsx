@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { getUser } from "../utils/getUser";
 import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
-import { scoreUpdate } from "../utils/scoreUpdate";
 import { QuestionIntf } from "../types/question";
 import Header from "./header";
 

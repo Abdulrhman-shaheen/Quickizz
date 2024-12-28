@@ -152,14 +152,6 @@ def answer_update():
 def sess_answers():
     request_data = request.get_json()
 
-    {
-        "objectID": self.id,
-        "a": self.count_a,
-        "b": self.count_b,
-        "c": self.count_c,
-        "d": self.count_d,
-    }
-    return jsonify({"good": 1})
 
 @app.route("/getscores", methods=["POST"])
 @cross_origin(supports_credentials=True)

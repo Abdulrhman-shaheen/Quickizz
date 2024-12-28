@@ -22,7 +22,6 @@ export async function handleAnswer(
 
   setSubmited(true);
   answersUpdate(question.sess_id, question._id, choice);
-  console.dir("dsjfpinfpdsignpaifndsp");
-  console.dir(newScore);
+
 
 }
