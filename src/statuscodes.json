@@ -6,6 +6,7 @@
     "WRONG_CREDS": 4,
     "UPDATED_QUIZ" : 5,
     "UPDATED_SCORE" : 6,
-    "UPDATED_ANSWER" : 7
+    "UPDATED_ANSWER" : 7,
+    "SCORES_FETCHED" : 8
 
 }

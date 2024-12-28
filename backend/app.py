@@ -17,7 +17,7 @@ db = DB_manager()
 def handle_login(request_data):
 
     if request_data["username"] == "" or request_data["password"] == "":
-        return jsonify({"good": 0})
+        return jsonify({"good": StatusCodes["EMPTY_FIELD"]})
 
     try:
         ph.verify(
@@ -78,7 +78,7 @@ def get_user():
 @app.route("/questions", methods=["GET"])
 @cross_origin()
 def questions():
-    sess_id = request.args.get("sess_id", default=1, type=int)
+    sess_id = request.args.get("sess_id", default=0, type=int)
     dbquestions = db["questions"].find({"sess_id": int(sess_id)})
     questions = []
     for question in dbquestions:
@@ -117,7 +117,7 @@ def quizz_update():
         db["quizzes"].insert_one(
             {"sess_id": sess_id, "username": username, "answers": {}, "score": 0}
         )
-    return jsonify({"good": 5})
+    return jsonify({"good": StatusCodes["UPDATED_QUIZ"]})
 
 
 @app.route("/updatescore", methods=["POST"])
@@ -130,7 +130,7 @@ def score_update():
     db["quizzes"].find_one_and_update(
         {"sess_id": sess_id, "username": username}, {"$set": {"score": score}}
     )
-    return jsonify({"good": 6})
+    return jsonify({"good": StatusCodes["UPDATED_SCORE"]})
 
 
 @app.route("/updateanswer", methods=["POST"])
@@ -144,7 +144,7 @@ def answer_update():
     choice = request_data["choice"]
 
     db["quizzes"].find_one_and_update({"username": username, "sess_id": sess_id}, {"$set": {f"answers.{q_id}": choice}})
-    return jsonify({"good": 7})
+    return jsonify({"good": StatusCodes["UPDATED_ANSWER"]})
 
 
 @app.route("/sessionanswers", methods=["POST"])
@@ -152,14 +152,22 @@ def answer_update():
 def sess_answers():
     request_data = request.get_json()
 
-    {
-        "objectID": self.id,
-        "a": self.count_a,
-        "b": self.count_b,
-        "c": self.count_c,
-        "d": self.count_d,
-    }
-    return jsonify({"good": 1})
+
+@app.route("/getscores", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def get_quizz():
+    username = request.cookies.get("username")
+    request_data = request.get_json()
+    quizzes = request_data["quizzes"]
+
+
+    scores = {}
+    
+    for quiz in quizzes:
+            scores[quiz] = db["quizzes"].find_one({"sess_id": int(quiz), "username": username})["score"]
+    
+    return jsonify({"good": StatusCodes["SCORES_FETCHED"], "scores": scores})
+
 
 
 @app.route("/choices", methods=["POST"])
@@ -171,14 +179,12 @@ def choices():
         sess_id = int(request_data["sess_id"])
         username = str(request_data["username"])
     except KeyError:
-        return jsonify({"good": 0})
+        return jsonify({"good": StatusCodes["EMPTY_FIELD"]})
 
     try:
-        print(sess_id, username)
         choices = db["quizzes"].find_one(
             {"sess_id": int(sess_id), "username": username}
         )
-        print(choices)
         choices["_id"] = str(choices["_id"])
     except:
         return jsonify(0)
