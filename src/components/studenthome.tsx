@@ -12,7 +12,7 @@ function StudentHome() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  
+
   const toggleDialog = () => {
     setDialogOpen(!dialogOpen);
   };
@@ -32,8 +32,12 @@ function StudentHome() {
   }, []);
 
   const quizzes = user ? user["quizzes"] : [];
-  const quizScores = fetchingData<Choices[]>(`${import.meta.env.VITE_BACKEND_URL}/updateuserquizzes`)
+  const [quizScores, setQuizScore] = fetchingData<{ scores: { [key: number]: number } }>(
+    `${import.meta.env.VITE_BACKEND_URL}/getscores`,
+    { quizzes: quizzes, watch: [user], credentials: true }
+  );
 
+  console.dir(quizScores);
   return (
     <div>
       <Header user={user} navigate={navigate} />
@@ -41,13 +45,15 @@ function StudentHome() {
         quizzes.map((quiz: number) => (
           <div key={quiz} className="flex flex-col items-center mt-6">
             <QuestionsTransition>
-                <button
-                  onClick={() => navigate(`/student/interface/${quiz}`)}
-                  className="bg-transparent flex flex-row items-center justify-between rounded-lg hover:bg-white/15 text-white p-2 w-full h-full duration-200"
-                >
-                  <p className="text-2xl">Quiz: {quiz}</p>
-                  <p className="text-xl">Score: {quizScores?.find(qs => qs.sess_id.includes(quiz.toString()))?.score ?? "0"}</p>
-                </button>
+              <button
+                onClick={() => navigate(`/student/interface/${quiz}`)}
+                className="bg-transparent flex flex-row items-center justify-between rounded-lg hover:bg-white/15 text-white p-2 w-full h-full duration-200"
+              >
+                <p className="text-2xl">Quiz: {quiz}</p>
+                <p className="text-xl">
+                  Score: {quizScores != undefined ? quizScores["scores"][quiz] : "0"}
+                </p>
+              </button>
             </QuestionsTransition>
           </div>
         ))
@@ -57,12 +63,19 @@ function StudentHome() {
         </div>
       )}
       <div className="absolute bottom-10 right-10 mr-auto text-2xl font-inter text-gray-300 italic">
-        <button onClick={() => toggleDialog()} className="bg-white hover:bg-gray-300  text-black font-bold py-2 px-4 rounded-full transform transition-transform duration-600 hover:rotate-180">
+        <button
+          onClick={() => toggleDialog()}
+          className="bg-white hover:bg-gray-300  text-black font-bold py-2 px-4 rounded-full transform transition-transform duration-600 hover:rotate-180"
+        >
           +
         </button>
-        {dialogOpen && (<Dialogue toggle={toggleDialog} navigate={navigate} userType={"student"}/>
-)}
-
+        {dialogOpen && (
+          <Dialogue
+            toggle={toggleDialog}
+            navigate={navigate}
+            userType={"student"}
+          />
+        )}
       </div>
     </div>
   );

@@ -12,9 +12,18 @@ import Header from "./header";
 function StudentIntf() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
-  let [newscore, setNewScore] = useState(0);
 
-  let sess_id = useParams()["sess_id"];
+  let sess_id = useParams()["sess_id"] as string;
+
+  let [newScore, setScore] = fetchingData<{
+    scores: { [key: string]: number };
+  }>(`${import.meta.env.VITE_BACKEND_URL}/getscores`, {
+    quizzes: [sess_id],
+    watch: [user],
+    credentials: true,
+  });
+
+  
   if (Number.isNaN(Number(sess_id))) {
     navigate("/student/home");
   }
@@ -32,26 +41,32 @@ function StudentIntf() {
     fetchData();
   }, []);
 
-  let Questions = fetchingData<QuestionIntf[]>(
-    `${import.meta.env.VITE_BACKEND_URL}/questions`
+  let [Questions, _] = fetchingData<QuestionIntf[]>(
+    `${import.meta.env.VITE_BACKEND_URL}/questions?sess_id=${sess_id}`
   );
 
   let total = Questions ? Questions.length : 0;
-  scoreUpdate(sess_id ? sess_id : "", newscore);
+
   return (
     <div>
-    <Header
+      <Header
         user={user}
         navigate={navigate}
-        score={String(newscore) + "/" + String(total)}
+        score={
+          String(newScore ? newScore["scores"][sess_id] : 0) +
+          "/" +
+          String(total)
+        }
       />
+      
       <div className="flex flex-col mt-5 gap-2 items-center">
         {Questions ? (
           Questions.map((question) => (
             <QuestionsTransition key={question._id}>
               <Question
                 question={question}
-                setScore={setNewScore}
+                score={newScore ? newScore["scores"][sess_id] : 0}
+                setScore={setScore}
                 key={question._id}
               />
             </QuestionsTransition>
