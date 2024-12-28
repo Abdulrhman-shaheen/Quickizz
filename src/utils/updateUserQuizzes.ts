@@ -3,20 +3,23 @@ const StatusCodes = Object.fromEntries(
   Object.entries(StatusCode).map(([key, value]) => [value, key])
 );
 
-export async function updateUserQuizzes(sess_id : number){
-  
+export async function updateUserQuizzes(sess_id: number, type: string) {
+  let url = "";
+  if (type == "student") {
+    url += "/updateuserquizzes";
+  } else if (type == "lecturer") {
+    url += "/updateusersessions";
+  }
+
   try {
-    const response = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/updateuserquizzes`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({sess_id: sess_id}),
-        credentials: "include",
-      }
-    );
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/${url}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sess_id: sess_id }),
+      credentials: "include",
+    });
 
     if (response.ok) {
       const result = await response.json();
@@ -29,5 +32,4 @@ export async function updateUserQuizzes(sess_id : number){
     console.error("Error during the request:", error);
     throw error;
   }
-
 }

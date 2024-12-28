@@ -1,18 +1,32 @@
 import { useState } from "react";
-import { submitChoice } from "../utils/submitchoice";
+import { submitChoice } from "../utils/submitChoice";
 import { fetchingData } from "../utils/fetchingData";
 import { QuestionIntf } from "../types/question";
 import { Choices } from "../types/choices";
-import {sessionAnswers} from "../types/sessionAnswers";
+import { sessionAnswers } from "../types/sessionAnswers";
 
-function NotQuestion({question, setScore, sess_id}: {question: QuestionIntf, setScore: () => void, sess_id: string}) {
+function NotQuestion({
+  question,
+  setScore,
+  sess_id,
+}: {
+  question: QuestionIntf;
+  setScore: () => void;
+  sess_id: string;
+}) {
   let [submited, setSubmited] = useState(false);
   let [selected, setSelected] = useState<string>("");
   let [showMessage, setShowMessage] = useState(false);
 
-  let answers = fetchingData<Choices>(`${import.meta.env.VITE_BACKEND_URL}/quizzes`);
-  
-  if (answers && answers["answers"] && answers["answers"][question["_id"]] !== undefined) {
+  let answers = fetchingData<Choices>(
+    `${import.meta.env.VITE_BACKEND_URL}/quizzes`
+  );
+
+  if (
+    answers &&
+    answers["answers"] &&
+    answers["answers"][question["_id"]] !== undefined
+  ) {
     setSubmited(true);
     setSelected(answers ? String(answers["answers"][question["_id"]]) : "");
     setShowMessage(true);
@@ -28,16 +42,16 @@ function NotQuestion({question, setScore, sess_id}: {question: QuestionIntf, set
       : "";
   };
 
-  let sessionAnswers = fetchingData<sessionAnswers>(`${import.meta.env.VITE_BACKEND_URL}/sessionanswers`);
-  
+  let sessionAnswers = fetchingData<sessionAnswers>(
+    `${import.meta.env.VITE_BACKEND_URL}/sessionanswers`
+  );
+
   console.log(sessionAnswers);
-  
-  
+
   let precentage = 0;
   let total = 0;
 
   const counter = (value: string) => {
-    
     sessionAnswers.forEach((item) => {
       total =
         parseInt(item.a, 10) +
@@ -66,7 +80,6 @@ function NotQuestion({question, setScore, sess_id}: {question: QuestionIntf, set
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSelected(e.target.value);
 
-  
   const newClass = (option: string) => {
     if (submited) {
       if (option === question.correct) {
@@ -112,6 +125,7 @@ function NotQuestion({question, setScore, sess_id}: {question: QuestionIntf, set
             key={choice}
           >
             <div className="w-4 h-4 duration-300 border-2 border-gray-300 rounded-full flex items-center justify-center">
+
               <input
                 onChange={handleChange}
                 disabled={submited}
@@ -122,6 +136,7 @@ function NotQuestion({question, setScore, sess_id}: {question: QuestionIntf, set
               />
 
               <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white"></div>
+            
             </div>
             <span className="mr-auto">{question[choice]}</span>
             {counter(choice)}

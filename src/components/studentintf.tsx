@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
 import { QuestionIntf } from "../types/question";
 import Header from "./header";
+import {sessionAnswers} from "../types/sessionAnswers";
 
 function StudentIntf() {
   const navigate = useNavigate();
@@ -44,6 +45,10 @@ function StudentIntf() {
     `${import.meta.env.VITE_BACKEND_URL}/questions?sess_id=${sess_id}`
   );
 
+  let [answers, __] = fetchingData<sessionAnswers>(
+    `${import.meta.env.VITE_BACKEND_URL}/answers?sess_id=${sess_id}`
+  );
+  
   let total = Questions ? Questions.length : 0;
 
   return (

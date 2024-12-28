@@ -88,21 +88,9 @@ def questions():
     return jsonify(questions)
 
 
-@app.route("/counters", methods=["GET"])
-@cross_origin()
-def counters_GET():
-    dbchoices = db["answers"].find()
-    choices = []
-    for choice in dbchoices:
-        choice["_id"] = str(choice["_id"])
-        choices.append(choice)
-
-    return jsonify(choices)
-
-
-@app.route("/updateuserquizzes", methods=["POST"])
+@app.route("/updateuserquizzes", methods=["POST"])  # Equivalent to update user sessions
 @cross_origin(supports_credentials=True)
-def quizz_update():
+def user_quizz_update():
     username = request.cookies.get("username")
     request_data = request.get_json()
     sess_id = int(request_data["sess_id"])
@@ -133,7 +121,7 @@ def score_update():
     return jsonify({"good": StatusCodes["UPDATED_SCORE"]})
 
 
-@app.route("/updateanswer", methods=["POST"])
+@app.route("/updateanswer", methods=["POST"])  # Equivalent to update session answer
 @cross_origin(supports_credentials=True)
 def answer_update():
     username = request.cookies.get("username")
@@ -143,14 +131,39 @@ def answer_update():
     q_id = request_data["q_id"]
     choice = request_data["choice"]
 
-    db["quizzes"].find_one_and_update({"username": username, "sess_id": sess_id}, {"$set": {f"answers.{q_id}": choice}})
+    db["quizzes"].find_one_and_update(
+        {"username": username, "sess_id": sess_id},
+        {"$set": {f"answers.{q_id}": choice}},
+    )
+
+    db["answers"].update_one(
+        {"sess_id": sess_id},  # Match the document by session ID
+        {"$inc": {f"answers.{q_id}.{choice}": 1}},  # Increment the specific choice count
+    )
+
     return jsonify({"good": StatusCodes["UPDATED_ANSWER"]})
 
 
-@app.route("/sessionanswers", methods=["POST"])
-@cross_origin()
-def sess_answers():
+@app.route("/updateusersessions", methods=["POST"])  # Equivalent to update user quizzes
+@cross_origin(supports_credentials=True)
+def user_sessions_update():
+    username = request.cookies.get("username")
     request_data = request.get_json()
+    sess_id = int(request_data["sess_id"])
+
+    if db["answers"].find_one({"sess_id": sess_id}) == None:
+        db["answers"].insert_one({"sess_id": sess_id, "answers": {}})
+
+    newsessions = list(
+        set(db["users"].find_one({"username": username})["sessions"] + [sess_id])
+    )
+    
+    db["users"].find_one_and_update(
+        {"username": username}, {"$set": {"sessions": newsessions}}
+    )
+
+    return jsonify({"good": StatusCodes["UPDATED_SESSION"]})
+
 
 
 @app.route("/getscores", methods=["POST"])
@@ -160,14 +173,14 @@ def get_quizz():
     request_data = request.get_json()
     quizzes = request_data["quizzes"]
 
-
     scores = {}
-    
-    for quiz in quizzes:
-            scores[quiz] = db["quizzes"].find_one({"sess_id": int(quiz), "username": username})["score"]
-    
-    return jsonify({"good": StatusCodes["SCORES_FETCHED"], "scores": scores})
 
+    for quiz in quizzes:
+        scores[quiz] = db["quizzes"].find_one(
+            {"sess_id": int(quiz), "username": username}
+        )["score"]
+
+    return jsonify({"good": StatusCodes["SCORES_FETCHED"], "scores": scores})
 
 
 @app.route("/choices", methods=["POST"])
