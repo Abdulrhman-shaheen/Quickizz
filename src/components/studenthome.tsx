@@ -43,7 +43,7 @@ function StudentHome() {
             <QuestionsTransition>
                 <button
                   onClick={() => navigate(`/student/interface/${quiz}`)}
-                  className="bg-transparent flex flex-row items-center justify-between hover:bg-white/15 text-white p-2 w-full h-full duration-200"
+                  className="bg-transparent flex flex-row items-center justify-between rounded-lg hover:bg-white/15 text-white p-2 w-full h-full duration-200"
                 >
                   <p className="text-2xl">Quiz: {quiz}</p>
                   <p className="text-xl">Score: {quizScores?.find(qs => qs.sess_id.includes(quiz.toString()))?.score ?? "0"}</p>
