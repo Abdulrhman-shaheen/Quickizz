@@ -56,6 +56,8 @@ function LecturerHome() {
           <button onClick={() => toggleDialog()} className="bg-white hover:bg-gray-300  text-black font-bold py-2 px-4 rounded-full transform transition-transform duration-600 hover:rotate-180">
             +
           </button>
+          
+          {/* TODO: Handle creating new session for the lecturer in the database if the session doesn't exist */}
           {dialogOpen && (<Dialogue toggle={toggleDialog} navigate={navigate} userType={"lecturer"}/>
   )}
   

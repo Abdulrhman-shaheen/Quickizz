@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useState } from "react";
+import { QuestionIntf } from "../types/question";
 
 
 
-function LecturerQuestion () {
+function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: QuestionIntf | null}) {
     const params = useParams();
     const [question, setQuestion] = useState("");
     const [answers, setAnswers] = useState(["", "", "", ""]);
@@ -12,6 +13,9 @@ function LecturerQuestion () {
 
     let sess_id = params["sess_id"];
 
+
+    //  TODO: Handle sending the question to the backend
+    
     const sendDataToDB = async () => {
         try {
           const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/add-question`, {
@@ -73,56 +77,64 @@ function LecturerQuestion () {
     return (
         <>
         <h2 className="text-2xl mb-4" style={{ display : isSubmitted ? "none" : "block" }}> Create a new question </h2>
-    <div className="mb-4">
-                  <label className="block text-gray-700 text-sm font-bold mb-2">
-                    Question:
-                  </label>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Question:
+            </label>
+            <input
+              type="text"
+              onChange={handleQuestionChange}
+              disabled={isSubmitted || old}
+              value = {oldQuestion ? oldQuestion.question : question}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:text-white"
+            />
+          </div>
+
+          <div className="mb-4">
+
+            {answers.map((answer, index) => (
+              <div key={index} className="mb-2">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Answer {index + 1}:
+                </label>
+
+                <input
+                  type="text"
+                  value={oldQuestion ? oldQuestion[transform_radio(index) as keyof QuestionIntf] : answer}
+                  onChange={(e) => handleAnswerChange(index, e.target.value)}
+                  disabled={isSubmitted || old}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:text-white"
+                />
+
+                <label className="inline-flex items-center mt-2">
                   <input
-                    type="text"
-                    value={question}
-                    onChange={handleQuestionChange}
-                    disabled={isSubmitted}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:text-white"
+                    type="radio"
+                    name="correctAnswer"
+                    checked={correctAnswer === index || (old && oldQuestion?.correct === transform_radio(index))}
+                    onChange={() => handleCorrectAnswerChange(index)}
+                    disabled={isSubmitted || old}
+                    className="radio radio-lg radio-secondary disabled:cursor-not-allowed"
                   />
-                </div>
-                <div className="mb-4">
-                  {answers.map((answer, index) => (
-                    <div key={index} className="mb-2">
-                      <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Answer {index + 1}:
-                      </label>
-                      <input
-                        type="text"
-                        value={answer}
-                        onChange={(e) => handleAnswerChange(index, e.target.value)}
-                        disabled={isSubmitted}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:text-white"
-                      />
-                      <label className="inline-flex items-center mt-2">
-                        <input
-                         type="radio"
-                         name="correctAnswer"
-                         checked={correctAnswer === index}
-                         onChange={() => handleCorrectAnswerChange(index)}
-                         disabled={isSubmitted}
-                         className="radio radio-lg radio-secondary disabled:cursor-not-allowed"
-                        />
-                        <span className="ml-2">Correct Answer</span>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex justify-between">
-                  <button
-                    onClick={handleSubmit}
-                    disabled={isSubmitted}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:bg-gray-400"
-                  >
-                    Sumbit
-                  </button>
-                </div>
-                <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-75 dark:via-neutral-400" />
-                </>
+                  <span className="ml-2">Correct Answer</span>
+
+                </label>
+              </div>
+            ))}
+
+          </div>
+
+          <div className="flex justify-between">
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitted || old}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:cursor-not-allowed disabled:bg-gray-400"
+            >
+              Sumbit
+            </button>
+          </div>
+          <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-75 dark:via-neutral-400" />
+          
+        </>
     ); }
 
     export default LecturerQuestion;
