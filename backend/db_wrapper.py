@@ -4,8 +4,6 @@ import dotenv
 
 env = dotenv.dotenv_values(r"..\.env") 
 
-
-
 class DB_manager:
     _instance = None
 
