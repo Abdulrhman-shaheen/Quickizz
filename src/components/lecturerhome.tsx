@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../utils/getUser";
 import Dialogue from "./dialogue";
+import QuestionsTransition from "./questiontransition";
 
 function LecturerHome() {
     const navigate = useNavigate();
@@ -28,18 +29,25 @@ function LecturerHome() {
       fetchData();
     }, []);
   
-    const quizzes = user ? user["quizzes"] : [];
+    const sessions = user ? user["sessions"] : [];
   
     return (
       <div>
         <Header user={user} navigate={navigate} />
-        {quizzes.length > 0 ? (
-          quizzes.map((quiz) => (
-            <div key={quiz} className="flex  m-12 gap-10">
-              <div className="border min-w-96 h-96"></div>
-            </div>
-          ))
-        ) : (
+        {sessions.length > 0 ? (
+          sessions.map((session) => (
+            <div key={session} className="flex flex-col items-center mt-6">
+            <QuestionsTransition>
+                <button
+                  onClick={() => navigate(`/lecturer/interface/${session}`)}
+                  className="bg-transparent flex flex-row items-center justify-between rounded-lg hover:bg-white/15 text-white p-2 w-full h-full duration-200"
+                >
+                  <p className="text-2xl">Quiz: {session}</p>
+                </button>
+            </QuestionsTransition>
+          </div>
+        ))
+      ) : (
           <div className="flex justify-center items-center h-96 text-2xl font-inter text-gray-200 italic">
             No previous quizzes available
           </div>
