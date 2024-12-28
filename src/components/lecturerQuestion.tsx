@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QuestionIntf } from "../types/question";
-
+import { io, Socket } from "socket.io-client";
 
 
 function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: QuestionIntf | null}) {
@@ -10,6 +10,15 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
     const [answers, setAnswers] = useState(["", "", "", ""]);
     const [correctAnswer, setCorrectAnswer] = useState<number | null>(null);
     const [isSubmitted, setIsSubmitted] = useState(false); // State to track submission
+    const [socket, setSocket] = useState<Socket | null>(null);
+
+    useEffect(() => {
+      const newSocket = io();
+      setSocket(newSocket);
+      return () => {
+        newSocket.disconnect();
+      };
+    },[]);
 
     let sess_id = params["sess_id"];
 
@@ -55,6 +64,16 @@ function LecturerQuestion ({old, oldQuestion} : {old: boolean, oldQuestion: Ques
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         await sendDataToDB();
+        
+        socket?.emit("new_question", {
+          sess_id: sess_id,
+          question: question,
+          a: answers[0],
+          b: answers[1],
+          c: answers[2],
+          d: answers[3],
+          correct: transform_radio(correctAnswer),
+        });             
         // Reset the form for the next question
         setIsSubmitted(true);
       };
