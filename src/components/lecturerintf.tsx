@@ -133,11 +133,11 @@ function LecturerIntf() {
                       />
                       <label className="inline-flex items-center mt-2">
                         <input
-                          type="radio"
-                          name="correctAnswer"
-                          checked={correctAnswer === index}
-                          onChange={() => handleCorrectAnswerChange(index)}
-                          className="form-radio"
+                         type="radio"
+                         name="correctAnswer"
+                         checked={correctAnswer === index}
+                         onChange={() => handleCorrectAnswerChange(index)}
+                         className="radio radio-lg radio-secondary"
                         />
                         <span className="ml-2">Correct Answer</span>
                       </label>
