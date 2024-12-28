@@ -3,5 +3,9 @@
     "USER_CREATED": 1,
     "SUCCESS_LOGIN": 2,
     "USER_NAME_EXISTS": 3,
-    "WRONG_CREDS": 4
+    "WRONG_CREDS": 4,
+    "UPDATED_QUIZ" : 5,
+    "UPDATED_SCORE" : 6,
+    "UPDATED_ANSWER" : 7
+
 }

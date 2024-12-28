@@ -1,5 +1,5 @@
 import { User } from "../types/user";
-const Header = ({user, navigate} : {user :User | null, navigate : any} ) => {
+const Header = ({user, navigate, score} : {user :User | null, navigate : any, score? : string} ) => {
   return (
     <header className="border-b-2 text-black text-2xl p-6">
       <div className="flex flex-row justify-between items-center">
@@ -11,6 +11,10 @@ const Header = ({user, navigate} : {user :User | null, navigate : any} ) => {
         >
           {user ? `${user.firstname} ${user.lastname}` : ""}
         </h1>
+
+        <p className="text-white flex items-center absolute left-1/2 transform -translate-x-1/2">
+            {score}
+        </p>
 
         <button
           onClick={() => {

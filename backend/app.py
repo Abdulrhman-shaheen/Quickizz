@@ -70,10 +70,6 @@ def loginlecturer():
 @cross_origin(supports_credentials=True)
 def get_user():
     username = request.cookies.get("username")
-    print(username)
-    print(
-        "-------------------------------------------------------------------------------------------------------------------------------------"
-    )
     user = db["users"].find_one({"username": username})
     user["_id"] = str(user["_id"])
     return jsonify(user)
@@ -104,18 +100,65 @@ def counters_GET():
     return jsonify(choices)
 
 
+@app.route("/updateuserquizzes", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def quizz_update():
+    username = request.cookies.get("username")
+    request_data = request.get_json()
+    sess_id = int(request_data["sess_id"])
+
+    newquizzes = list(
+        set(db["users"].find_one({"username": username})["quizzes"] + [sess_id])
+    )
+    db["users"].find_one_and_update(
+        {"username": username}, {"$set": {"quizzes": newquizzes}}
+    )
+    if db["quizzes"].find_one({"sess_id": sess_id, "username": username}) == None:
+        db["quizzes"].insert_one(
+            {"sess_id": sess_id, "username": username, "answers": {}, "score": 0}
+        )
+    return jsonify({"good": 5})
+
+
+@app.route("/updatescore", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def score_update():
+    username = request.cookies.get("username")
+    request_data = request.get_json()
+    sess_id = int(request_data["sess_id"])
+    score = request_data["score"]
+    db["quizzes"].find_one_and_update(
+        {"sess_id": sess_id, "username": username}, {"$set": {"score": score}}
+    )
+    return jsonify({"good": 6})
+
+
+@app.route("/updateanswer", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def answer_update():
+    username = request.cookies.get("username")
+    request_data = request.get_json()
+
+    sess_id = int(request_data["sess_id"])
+    q_id = request_data["q_id"]
+    choice = request_data["choice"]
+
+    db["quizzes"].find_one_and_update({"username": username, "sess_id": sess_id}, {"$set": {f"answers.{q_id}": choice}})
+    return jsonify({"good": 7})
+
+
 @app.route("/sessionanswers", methods=["POST"])
 @cross_origin()
 def sess_answers():
     request_data = request.get_json()
-    
+
     {
-            "objectID": self.id,
-            "a": self.count_a,
-            "b": self.count_b,
-            "c": self.count_c,
-            "d": self.count_d,
-        }
+        "objectID": self.id,
+        "a": self.count_a,
+        "b": self.count_b,
+        "c": self.count_c,
+        "d": self.count_d,
+    }
     return jsonify({"good": 1})
 
 
@@ -123,15 +166,23 @@ def sess_answers():
 @cross_origin()
 def choices():
     request_data = request.get_json()
-    
+
     try:
         sess_id = int(request_data["sess_id"])
         username = str(request_data["username"])
     except KeyError:
         return jsonify({"good": 0})
-    
-    choices = db["quizzes"].find_one({"sess_id": sess_id}, {"username": username})
-    choices["_id"] = str(choices["_id"])
+
+    try:
+        print(sess_id, username)
+        choices = db["quizzes"].find_one(
+            {"sess_id": int(sess_id), "username": username}
+        )
+        print(choices)
+        choices["_id"] = str(choices["_id"])
+    except:
+        return jsonify(0)
+
     return jsonify(choices)
 
 

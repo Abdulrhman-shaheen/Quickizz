@@ -1,12 +1,18 @@
 import { useState } from "react";
-
+import { updateUserQuizzes } from "../utils/updateUserQuizzes";
 
 function Dialogue({ toggle, navigate, userType }: { toggle: () => void, navigate: any, userType: String }) {
 
   const handleEnterLogic = (): void => {
    // TODO
     /* request to db to modify user quiz list */
+    /* I ain't doing that*/
+    if(userType == "student"){
+      updateUserQuizzes(sess_id);
+      
+    }
     navigate(`/${userType}/interface/${sess_id}`);
+   
   };
 
   let [sess_id, setSess_id] = useState(0);  
