@@ -7,12 +7,28 @@ import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
 import { QuestionIntf } from "../types/question";
 import Header from "./header";
+import { io } from "socket.io-client";
 
 function StudentIntf() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
 
   let sess_id = useParams()["sess_id"] as string;
+
+  let [Questions, setQuestions] = fetchingData<QuestionIntf[]>(
+    `${import.meta.env.VITE_BACKEND_URL}/questions?sess_id=${sess_id}`
+  );
+
+  useEffect(() => {
+    const socket = io();
+
+    socket.on("new_question", (data: QuestionIntf) => {
+      setQuestions((prev) => (prev ? [...prev, data] : [data]));
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   let [newScore, setScore] = fetchingData<{
     scores: { [key: string]: number };
@@ -22,7 +38,6 @@ function StudentIntf() {
     credentials: true,
   });
 
-  
   if (Number.isNaN(Number(sess_id))) {
     navigate("/student/home");
   }
@@ -40,9 +55,6 @@ function StudentIntf() {
     fetchData();
   }, []);
 
-  let [Questions, _] = fetchingData<QuestionIntf[]>(
-    `${import.meta.env.VITE_BACKEND_URL}/questions?sess_id=${sess_id}`
-  );
 
   let total = Questions ? Questions.length : 0;
 
@@ -57,7 +69,7 @@ function StudentIntf() {
           String(total)
         }
       />
-      
+
       <div className="flex flex-col mt-5 gap-2 items-center">
         {Questions ? (
           Questions.map((question) => (
