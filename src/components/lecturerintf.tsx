@@ -69,7 +69,7 @@ function LecturerIntf() {
     <div>
       <Header user={user} navigate={navigate} score = {` Quiz #${sess_id}`} />
       <div className="flex flex-col items-center ">
-      <div className="p-6 w-1/2 min-w-min flex flex-col gap-7">
+      <div className="p-6 w-1/2 min-w-min flex flex-col gap-3">
 
         {old_questions && old_questions.length > 0 ? (
           old_questions.map((question) => (
@@ -93,7 +93,7 @@ function LecturerIntf() {
           </div>
         ))}
 
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between">
           <button
             onClick={handleNext}
             className="bg-white hover:bg-white/15 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

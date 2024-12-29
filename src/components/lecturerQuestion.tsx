@@ -54,6 +54,7 @@ function LecturerQuestion({
         throw new Error("Failed to send data to the database");
       }
       const result = await response.json();
+      console.log(transform_radio(correctAnswer));
       console.log(result);
     } catch (error) {
       console.error("Error:", error);
@@ -75,6 +76,7 @@ function LecturerQuestion({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await sendDataToDB();
+    
 
     socket?.emit("new_question", {
       sess_id: sess_id,
@@ -121,13 +123,13 @@ function LecturerQuestion({
           onChange={handleQuestionChange}
           disabled={isSubmitted || old}
           value={oldQuestion ? oldQuestion.question : question}
-          className="shadow appearance-none border rounded-xl w-full  py-4 px-3 text-white bg-transparent leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed "
+          className="shadow appearance-none border rounded-xl w-full  py-3 px-3 text-white bg-transparent leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed "
         />
       </div>
 
       <div className="mb-4">
         {answers.map((answer, index) => (
-          <div key={index} className="mb-2">
+          <div key={index} className="mb-2 flex flex-col">
             <label className="block text-gray-400 text-sm font-bold mb-2">
               Answer {index + 1}:
             </label>
@@ -143,23 +145,30 @@ function LecturerQuestion({
               disabled={isSubmitted || old}
               className="shadow appearance-none border rounded-lg w-full py-2 px-3 text-white bg-transparent leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed"
             />
-
-            <label className="inline-flex items-center mt-2">
-              <input
-                type="radio"
-                name="correctAnswer"
-                checked={
-                  correctAnswer === index ||
-                  (old && oldQuestion?.correct === transform_radio(index))
-                }
-                onChange={() => handleCorrectAnswerChange(index)}
-                disabled={isSubmitted || old}
-                className="radio radio-lg radio-secondary disabled:cursor-not-allowed"
-              />
-              <span className="ml-2">Correct Answer</span>
-            </label>
           </div>
         ))}
+        <p className="block text-gray-400 text-xl font-bold mb-2">Correct Answer:</p>
+<div className="flex flex-row gap-4">
+  {answers.map((_, index) => (
+    <div key={index} className="flex flex-row justify-center items-center">
+      <label className="flex flex-row gap-3 items-center">
+      <span className="text-lg align-middle">{String.fromCharCode(97 + index)}</span>
+        <input
+          type="radio"
+          name="correctAnswer"
+          checked={
+            correctAnswer === index ||
+            (old && oldQuestion?.correct === transform_radio(index))
+          }
+          onChange={() => handleCorrectAnswerChange(index)}
+          disabled={isSubmitted || old}
+          className="align-middle mr-10 radio cursor-pointer radio-lg radio-secondary disabled:cursor-not-allowed"
+        />
+      </label>
+    </div>
+  ))}
+</div>
+
       </div>
 
       <div className="flex justify-between">
