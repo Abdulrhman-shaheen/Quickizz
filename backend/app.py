@@ -1,12 +1,18 @@
-from flask import Flask, request, render_template, jsonify, make_response
-from flask_cors import CORS, cross_origin
-from argon2 import PasswordHasher
 from enum import IntEnum
+
+from argon2 import PasswordHasher
+from flask import Flask, jsonify, make_response, render_template, request
+from flask_cors import CORS, cross_origin
+from flask_socketio import SocketIO, emit, join_room, send
+
 from db_wrapper import DB_manager
-from statuscodes import create_codes
 from Question import Question
+from statuscodes import create_codes
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app,  cors_allowed_origins="*")
+
 CORS(app)  # Enable CORS for all routes
 
 StatusCodes = create_codes()
@@ -95,6 +101,7 @@ def questions():
 
     return jsonify(questions)
 
+
 @app.route("/answers", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def answers():
@@ -149,9 +156,10 @@ def get_quizz():
     scores = {}
 
     for quiz in quizzes:
-        scores[quiz] = db["quizzes"].find_one(
+        object = db["quizzes"].find_one(
             {"sess_id": int(quiz), "username": username}
-        )["score"]
+        )
+        scores[quiz] = object["score"] if object else 0
 
     return jsonify({"good": StatusCodes["SCORES_FETCHED"], "scores": scores})
 
@@ -197,7 +205,9 @@ def answer_update():
             "$inc": {f"answers.{q_id}.{choice}": 1}
         },  # Increment the specific choice count
     )
-
+    print({"id" : q_id, "choice" : choice})
+    print("_-------------------------------_--__--_-----_-_----")
+    socketio.emit(f"{str(sess_id)}_new_answer", {"id" : q_id, "choice" : choice})
     return jsonify({"good": StatusCodes["UPDATED_ANSWER"]})
 
 
@@ -236,9 +246,42 @@ def add_question():
         request_data["d"],
         request_data["correct"],
     )
-    db["questions"].insert_one(question.to_dict())
 
+    db["questions"].insert_one(question.to_dict())
+    dd = str(db["questions"].find_one(question.to_dict())["_id"])
+    data = question.to_dict()
+    data["_id"] = dd
+    print(data)
+    socketio.emit(f"{request_data['sess_id']}_new_question", data)
     return jsonify({"good": StatusCodes["QUESTION_ADDED"]})
+
+
+# -----------------------------------SOCKETS (hopefully)-------------------------------
+
+@socketio.on('message')
+def handle_message(msg):
+    print('Message: ' + msg)
+    send(msg, broadcast=True)
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+@socketio.on('broadcast')
+def handle_broadcast_event(msg):
+    send(msg, broadcast=True)
+
+@socketio.on('custom_event')
+def handle_custom_event(data):
+    emit('response', {'data': 'Custom event received!'}, broadcast=True)
+
+if __name__ == '__main__':
+        socketio.run(app, debug=True)
+
 
 
 # @app.route("/test", methods=["GET"])

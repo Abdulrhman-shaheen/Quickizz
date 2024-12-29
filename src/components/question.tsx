@@ -11,7 +11,7 @@ function Question({
   prevchoice,
   alreadyAnswered,
 }: {
-  question: QuestionIntf;
+  question: QuestionIntf | any;
   score: number;
   setScore: any;
   choices: { a: number; b: number; c: number; d: number };
@@ -58,7 +58,7 @@ function Question({
           handleAnswer(question, selectedChoice, setSubmited, score, setScore)
         }
         className="bg-white text-black text-base  font-semibold hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 py-1 px-2 rounded-lg mt-6 disabled:bg-gray-400"
-        disabled={submitted}
+        disabled={submitted || !selectedChoice}
       >
         Submit
       </button>

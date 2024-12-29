@@ -3,3 +3,4 @@ Flask-Cors
 argon2-cffi
 pymongo
 python-dotenv
+flask_socketio

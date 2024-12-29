@@ -54,8 +54,7 @@ function LecturerQuestion({
         throw new Error("Failed to send data to the database");
       }
       const result = await response.json();
-      console.log(transform_radio(correctAnswer));
-      console.log(result);
+
     } catch (error) {
       console.error("Error:", error);
     }

@@ -10,6 +10,7 @@ import Header from "./header";
 import { sessionAnswers } from "../types/sessionAnswers";
 import { io } from "socket.io-client";
 import { Choices } from "../types/choices";
+import Choice from "./choice";
 
 function StudentIntf() {
   const navigate = useNavigate();
@@ -34,17 +35,54 @@ function StudentIntf() {
   );
 
   useEffect(() => {
-    const socket = io();
+    const socket = io("http://127.0.0.1:5000");
+    console.log("Initializing socket connection...");
 
-    socket.on("new_question", (data: QuestionIntf) => {
+    // Handle connection events
+    socket.on("connect", () => {
+      socket.send("Hello, server!");
+    });
+
+
+
+    socket.on( `${sess_id}_new_question`, (data) => {
       setQuestions((prev) => (prev ? [...prev, data] : [data]));
     });
-    
-    socket.on("new_answer", (data: sessionAnswers) => {
-      setAnswers(data);
-    });
 
+    socket.on(
+      `${sess_id}_new_answer`,
+      (data: { id: string; choice: "a" | "b" | "c" | "d" }) => {
+        setAnswers((prev) => {
+          let updatedPrev = { ...prev } as sessionAnswers;
+          let updatedAnswers = { ...updatedPrev.answers };
+          console.log("At least im here")
+          console.log(updatedAnswers)
+
+          if (!updatedAnswers[data.id]) {
+            updatedAnswers[data.id] = { a: 0, b: 0, c: 0, d: 0 };
+          }
+
+          if (!updatedAnswers[data.id][data.choice]) {
+            updatedAnswers[data.id][data.choice] = 0;
+          }
+
+          updatedAnswers[data.id][data.choice] += 1;
+          
+          updatedPrev.answers = updatedAnswers;
+          console.log(updatedAnswers)
+          return updatedPrev;
+        });
+      }
+    );
+
+
+    // Clean up on unmount
     return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("response");
+      socket.off("new_questionsas");
+      socket.off("new_answer");
       socket.disconnect();
     };
   }, []);
@@ -75,7 +113,9 @@ function StudentIntf() {
   }, []);
 
   let total = Questions ? Questions.length : 0;
-
+  
+  console.log(Questions)
+  
   return (
     <div>
       <Header
@@ -116,5 +156,4 @@ function StudentIntf() {
     </div>
   );
 }
-
 export default StudentIntf;
