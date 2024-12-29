@@ -121,7 +121,7 @@ function LecturerQuestion({
           onChange={handleQuestionChange}
           disabled={isSubmitted || old}
           value={oldQuestion ? oldQuestion.question : question}
-          className="shadow appearance-none border rounded-xl w-full mb-7 py-8 px-3 text-white bg-transparent leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed "
+          className="shadow appearance-none border rounded-xl w-full  py-4 px-3 text-white bg-transparent leading-tight focus:outline-none focus:shadow-outline disabled:cursor-not-allowed "
         />
       </div>
 

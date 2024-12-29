@@ -15,7 +15,7 @@ function LecturerIntf() {
   const params = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [questions, setQuestions] = useState<number[]>([0]); // Initialize with one question
-  const [_,__] = useState<any>(null);
+  const [_, __] = useState<any>(null);
 
   let sess_id = params["sess_id"];
   // TODO: Handle requesting old questions from the backend, they should be returned in the form of an array of QuestionIntf
@@ -67,23 +67,21 @@ function LecturerIntf() {
 
   return (
     <div>
-      <Header user={user} navigate={navigate} />
-      <div className="p-6">
-        
-        <h2 className="text-2xl mb-4"> Quiz # {sess_id}</h2>
+      <Header user={user} navigate={navigate} score = {` Quiz #${sess_id}`} />
+      <div className="flex flex-col items-center ">
+      <div className="p-6 w-1/2 min-w-min flex flex-col gap-7">
 
         {old_questions && old_questions.length > 0 ? (
           old_questions.map((question) => (
-            
             <QuestionsTransition key={question._id}>
-            <Question
-              question={question}
-              score={_}
-              setScore={__}
-              key={question._id}
-              alreadyAnswered={true}
-            />
-          </QuestionsTransition>
+              <Question
+                question={question}
+                score={_}
+                setScore={__}
+                key={question._id}
+                alreadyAnswered={true}
+              />
+            </QuestionsTransition>
           ))
         ) : (
           <p className="text-gray-400">No previous questions available</p>
@@ -91,9 +89,7 @@ function LecturerIntf() {
 
         {questions.map((index) => (
           <div key={index}>
-            {" "}
             <LecturerQuestion key={index} old={false} oldQuestion={null} />
-            <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-75 dark:via-neutral-400" />
           </div>
         ))}
 
@@ -111,6 +107,7 @@ function LecturerIntf() {
             Finish
           </button>
         </div>
+      </div>
       </div>
     </div>
   );

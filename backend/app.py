@@ -95,6 +95,19 @@ def questions():
 
     return jsonify(questions)
 
+@app.route("/answers", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def answers():
+    sess_id = request.args.get("sess_id", default=0, type=int)
+    print(request)
+    dbquestions = db["questions"].find({"sess_id": int(sess_id)})
+    questions = []
+    for question in dbquestions:
+        question["_id"] = str(question["_id"])
+        questions.append(question)
+
+    return jsonify(questions)
+
 
 @app.route("/updateuserquizzes", methods=["POST"])  # Equivalent to update user sessions
 @cross_origin(supports_credentials=True)
