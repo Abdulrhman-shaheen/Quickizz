@@ -10,7 +10,6 @@ import Header from "./header";
 import { sessionAnswers } from "../types/sessionAnswers";
 import { io } from "socket.io-client";
 import { Choices } from "../types/choices";
-import Choice from "./choice";
 
 function StudentIntf() {
   const navigate = useNavigate();
@@ -79,8 +78,6 @@ function StudentIntf() {
     // Clean up on unmount
     return () => {
       socket.off("connect");
-      socket.off("disconnect");
-      socket.off("response");
       socket.off("new_questionsas");
       socket.off("new_answer");
       socket.disconnect();

@@ -10,6 +10,8 @@ import { fetchingData } from "../utils/fetchingData";
 import Question from "./question";
 import QuestionsTransition from "./questiontransition";
 import { sessionAnswers } from "../types/sessionAnswers";
+import { io } from "socket.io-client";
+
 
 function LecturerIntf() {
   const navigate = useNavigate();
@@ -66,9 +68,58 @@ function LecturerIntf() {
     fetchData();
   }, [navigate, sess_id]);
 
-  let [answers, ___] = fetchingData<sessionAnswers>(
+  let [answers, setAnswers] = fetchingData<sessionAnswers>(
     `${import.meta.env.VITE_BACKEND_URL}/answers?sess_id=${sess_id}`
   );
+
+  useEffect(() => {
+    const socket = io("http://127.0.0.1:5000");
+    console.log("Initializing socket connection...");
+
+    // Handle connection events
+    socket.on("connect", () => {
+      socket.send("Hello, server!");
+    });
+
+    socket.on( `${sess_id}_new_question`, (data) => {
+      setOldQuestions((prev) => (prev ? [...prev, data] : [data]));
+      setQuestions([])
+    });
+
+    socket.on(
+      `${sess_id}_new_answer`,
+      (data: { id: string; choice: "a" | "b" | "c" | "d" }) => {
+        setAnswers((prev) => {
+          let updatedPrev = { ...prev } as sessionAnswers;
+          let updatedAnswers = { ...updatedPrev.answers };
+          console.log("At least im here")
+          console.log(updatedAnswers)
+
+          if (!updatedAnswers[data.id]) {
+            updatedAnswers[data.id] = { a: 0, b: 0, c: 0, d: 0 };
+          }
+
+          if (!updatedAnswers[data.id][data.choice]) {
+            updatedAnswers[data.id][data.choice] = 0;
+          }
+
+          updatedAnswers[data.id][data.choice] += 1;
+          
+          updatedPrev.answers = updatedAnswers;
+          console.log(updatedAnswers)
+          return updatedPrev;
+        });
+      }
+    );
+
+
+    // Clean up on unmount
+    return () => {
+      socket.off("new_answer");
+      socket.disconnect();
+    };
+  }, []);
+
 
   return (
     <div>

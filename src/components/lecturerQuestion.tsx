@@ -18,13 +18,7 @@ function LecturerQuestion({
   const [isSubmitted, setIsSubmitted] = useState(false); // State to track submission
   const [socket, setSocket] = useState<Socket | null>(null);
 
-  useEffect(() => {
-    const newSocket = io();
-    setSocket(newSocket);
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
+
 
   let sess_id = params["sess_id"];
 
@@ -53,8 +47,6 @@ function LecturerQuestion({
       if (!response.ok) {
         throw new Error("Failed to send data to the database");
       }
-      const result = await response.json();
-
     } catch (error) {
       console.error("Error:", error);
     }
