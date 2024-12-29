@@ -29,10 +29,10 @@ function StudentIntf() {
     `${import.meta.env.VITE_BACKEND_URL}/choices`,
     {
       sess_id: sess_id,
-      credentials : true
+      credentials: true,
     }
   );
- 
+
   useEffect(() => {
     const socket = io();
 
@@ -69,8 +69,6 @@ function StudentIntf() {
     fetchData();
   }, []);
 
-
- 
   let total = Questions ? Questions.length : 0;
 
   return (
@@ -86,15 +84,22 @@ function StudentIntf() {
       />
 
       <div className="flex flex-col mt-5 gap-2 items-center">
-        {Questions && choices ?  (
+        {Questions && choices ? (
           Questions.map((question) => (
             <QuestionsTransition key={question._id}>
               <Question
                 question={question}
                 score={newScore ? newScore["scores"][sess_id] : 0}
                 setScore={setScore}
+                choices={
+                  answers
+                    ? answers["answers"][question._id]
+                    : { a: 0, b: 0, c: 0, d: 0 }
+                }
+                alreadyAnswered={
+                  choices ? !!choices["answers"][question._id] : false
+                }
                 key={question._id}
-                alreadyAnswered={choices ? !!choices["answers"][question._id] : false}
               />
             </QuestionsTransition>
           ))

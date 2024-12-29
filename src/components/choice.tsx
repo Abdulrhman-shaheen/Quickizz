@@ -3,12 +3,16 @@ import { QuestionIntf } from "../types/question";
 function Choice({
   question,
   choice,
+  votes,
+  percent,
   selectedChoice,
   submitted,
   handleChoiceSelection,
 }: {
   question: QuestionIntf;
   choice: "a" | "b" | "c" | "d";
+  votes : number;
+  percent : number;
   selectedChoice: string;
   submitted: boolean;
   handleChoiceSelection: (choice: string) => void;
@@ -31,7 +35,7 @@ function Choice({
 
   return (
     <div
-      className={` w-96 duration-300 border-4 box-border flex flex-row items-center gap-3 p-2 rounded-lg mt-2 ${value}`}
+      className={` w-96 duration-300 border-2 box-border flex flex-row items-center gap-3 p-2 rounded-lg mt-2 ${value}`}
     >
       <label
         htmlFor={`choice-${question._id}-${choice}`}
@@ -54,7 +58,7 @@ function Choice({
           <div className="w-2.5 h-2.5 duration-300 border-gray-300 rounded-full flex items-center justify-center peer-checked:border-blue-500 peer-checked:bg-white"></div>
         </div>
         <span className="text-base flex justify-between w-full">
-          <p>{question[choice]}</p> <p>percent</p>
+          <p>{question[choice]}</p> <p>{submitted ? `(${votes}) ${percent}%` : ""}</p>
         </span>
       </label>
     </div>
