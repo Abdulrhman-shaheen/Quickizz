@@ -7,12 +7,15 @@ import { QuestionIntf } from "../types/question";
 import { getUser } from "../utils/getUser";
 import LecturerQuestion from "./lecturerQuestion";
 import { fetchingData } from "../utils/fetchingData";
+import Question from "./question";
+import QuestionsTransition from "./questiontransition";
 
 function LecturerIntf() {
   const navigate = useNavigate();
   const params = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [questions, setQuestions] = useState<number[]>([0]); // Initialize with one question
+  const [_,__] = useState<any>(null);
 
   let sess_id = params["sess_id"];
   // TODO: Handle requesting old questions from the backend, they should be returned in the form of an array of QuestionIntf
@@ -71,11 +74,16 @@ function LecturerIntf() {
 
         {old_questions && old_questions.length > 0 ? (
           old_questions.map((question) => (
-            <LecturerQuestion
+            
+            <QuestionsTransition key={question._id}>
+            <Question
+              question={question}
+              score={_}
+              setScore={__}
               key={question._id}
-              old={true}
-              oldQuestion={question}
+              alreadyAnswered={true}
             />
+          </QuestionsTransition>
           ))
         ) : (
           <p className="text-gray-400">No previous questions available</p>
