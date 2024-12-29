@@ -14,13 +14,16 @@ function Choice({
   handleChoiceSelection: (choice: string) => void;
 }) {
   let value = "";
-
   if (submitted) {
+    
     if (question.correct === choice) {
       value += "border-green-500 ";
     }
-    if (selectedChoice == choice) {
+    else if (selectedChoice == choice) {
       value += "border-red-500 ";
+    }
+    else{
+      value += "border-gray-500 ";
     }
   } else {
     value += "border-white hover:bg-white/10 hover:duration-300 cursor-pointer";

@@ -7,14 +7,15 @@ function Question({
   question,
   score,
   setScore,
+  alreadyAnswered,
 }: {
   question: QuestionIntf;
   score: number;
   setScore: any;
+  alreadyAnswered: boolean;
 }) {
   const [selectedChoice, setSelectedChoice] = useState<string>("");
-  const [submitted, setSubmited] = useState(false);
-
+  const [submitted, setSubmited] = useState(alreadyAnswered);
   return (
     <div className="flex flex-col items-center gap-2">
       <h1 className="text-xl mb-5 text-center pb-3">

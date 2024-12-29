@@ -184,16 +184,14 @@ def get_quizz():
 
 
 @app.route("/choices", methods=["POST"])
-@cross_origin()
+@cross_origin(supports_credentials=True)
 def choices():
     request_data = request.get_json()
-
     try:
         sess_id = int(request_data["sess_id"])
-        username = str(request_data["username"])
+        username = request.cookies.get("username")
     except KeyError:
         return jsonify({"good": StatusCodes["EMPTY_FIELD"]})
-
     try:
         choices = db["quizzes"].find_one(
             {"sess_id": int(sess_id), "username": username}

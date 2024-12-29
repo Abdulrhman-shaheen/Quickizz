@@ -6,7 +6,6 @@ import Header from "./header";
 import Dialogue from "./dialogue";
 import QuestionsTransition from "./questiontransition";
 import { fetchingData } from "../utils/fetchingData";
-import { Choices } from "../types/choices";
 
 function StudentHome() {
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ function StudentHome() {
     { quizzes: quizzes, watch: [user], credentials: true }
   );
 
-  console.dir(quizScores);
   return (
     <div>
       <Header user={user} navigate={navigate} />

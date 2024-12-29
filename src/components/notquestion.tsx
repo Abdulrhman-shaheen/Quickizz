@@ -46,7 +46,6 @@ function NotQuestion({
     `${import.meta.env.VITE_BACKEND_URL}/sessionanswers`
   );
 
-  console.log(sessionAnswers);
 
   let precentage = 0;
   let total = 0;

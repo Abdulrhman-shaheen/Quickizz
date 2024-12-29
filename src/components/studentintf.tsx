@@ -7,8 +7,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
 import { QuestionIntf } from "../types/question";
 import Header from "./header";
-import {sessionAnswers} from "../types/sessionAnswers";
+import { sessionAnswers } from "../types/sessionAnswers";
 import { io } from "socket.io-client";
+import { Choices } from "../types/choices";
 
 function StudentIntf() {
   const navigate = useNavigate();
@@ -19,11 +20,19 @@ function StudentIntf() {
   let [Questions, setQuestions] = fetchingData<QuestionIntf[]>(
     `${import.meta.env.VITE_BACKEND_URL}/questions?sess_id=${sess_id}`
   );
-  
-  let [answers, __] = fetchingData<sessionAnswers>(
+
+  let [answers, _] = fetchingData<sessionAnswers>(
     `${import.meta.env.VITE_BACKEND_URL}/answers?sess_id=${sess_id}`
   );
 
+  let [choices, __] = fetchingData<Choices>(
+    `${import.meta.env.VITE_BACKEND_URL}/choices`,
+    {
+      sess_id: sess_id,
+      credentials : true
+    }
+  );
+ 
   useEffect(() => {
     const socket = io();
 
@@ -61,9 +70,7 @@ function StudentIntf() {
   }, []);
 
 
-
-
-  
+ 
   let total = Questions ? Questions.length : 0;
 
   return (
@@ -79,7 +86,7 @@ function StudentIntf() {
       />
 
       <div className="flex flex-col mt-5 gap-2 items-center">
-        {Questions ? (
+        {Questions && choices ?  (
           Questions.map((question) => (
             <QuestionsTransition key={question._id}>
               <Question
@@ -87,6 +94,7 @@ function StudentIntf() {
                 score={newScore ? newScore["scores"][sess_id] : 0}
                 setScore={setScore}
                 key={question._id}
+                alreadyAnswered={choices ? !!choices["answers"][question._id] : false}
               />
             </QuestionsTransition>
           ))
