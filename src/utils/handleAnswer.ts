@@ -1,7 +1,6 @@
 import { QuestionIntf } from "../types/question";
 import { answersUpdate } from "./answerUpdate";
 import { scoreUpdate } from "./scoreUpdate";
-import { submitChoice } from "./submitchoice";
 
 export async function handleAnswer(
   question: QuestionIntf,
@@ -23,6 +22,5 @@ export async function handleAnswer(
   
   setSubmited(true);
   answersUpdate(question.sess_id, question._id, choice);
-  submitChoice(String(question.sess_id), question._id, choice);
 
 }

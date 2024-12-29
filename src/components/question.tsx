@@ -8,18 +8,21 @@ function Question({
   score,
   setScore,
   choices,
+  prevchoice,
   alreadyAnswered,
 }: {
   question: QuestionIntf;
   score: number;
   setScore: any;
   choices: { a: number; b: number; c: number; d: number };
+  prevchoice : string
   alreadyAnswered: boolean;
 }) {
   const [selectedChoice, setSelectedChoice] = useState<string>("");
   const [submitted, setSubmited] = useState(alreadyAnswered);
   
-
+  
+  
   let total_choices = 0;
   (["a", "b", "c", "d"] as const).map((choice) => {
     total_choices += choices && choices[choice] ? choices[choice] : 0;
@@ -45,7 +48,7 @@ function Question({
           choice={choice}
           votes={choices && choices[choice] ? choices[choice] : 0}
           percent={percentages[choice]}
-          selectedChoice={selectedChoice}
+          selectedChoice={prevchoice ? prevchoice : selectedChoice}
           handleChoiceSelection={setSelectedChoice}
           submitted={submitted}
         />

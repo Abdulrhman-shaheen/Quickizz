@@ -82,6 +82,7 @@ function LecturerIntf() {
                   question={question}
                   score={_}
                   setScore={__}
+                  prevchoice=""
                   choices={
                     answers
                       ? answers["answers"][question._id]

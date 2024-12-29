@@ -21,11 +21,11 @@ function StudentIntf() {
     `${import.meta.env.VITE_BACKEND_URL}/questions?sess_id=${sess_id}`
   );
 
-  let [answers, _] = fetchingData<sessionAnswers>(
+  let [answers, setAnswers] = fetchingData<sessionAnswers>(
     `${import.meta.env.VITE_BACKEND_URL}/answers?sess_id=${sess_id}`
   );
 
-  let [choices, __] = fetchingData<Choices>(
+  let [choices, _] = fetchingData<Choices>(
     `${import.meta.env.VITE_BACKEND_URL}/choices`,
     {
       sess_id: sess_id,
@@ -39,6 +39,11 @@ function StudentIntf() {
     socket.on("new_question", (data: QuestionIntf) => {
       setQuestions((prev) => (prev ? [...prev, data] : [data]));
     });
+    
+    socket.on("new_answer", (data: sessionAnswers) => {
+      setAnswers(data);
+    });
+
     return () => {
       socket.disconnect();
     };
@@ -96,6 +101,7 @@ function StudentIntf() {
                     ? answers["answers"][question._id]
                     : { a: 0, b: 0, c: 0, d: 0 }
                 }
+                prevchoice={choices["answers"][question._id]}
                 alreadyAnswered={
                   choices ? !!choices["answers"][question._id] : false
                 }
