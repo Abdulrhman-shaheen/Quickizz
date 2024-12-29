@@ -24,6 +24,7 @@ Quickizz is a web-based platform designed to make testing and evaluation in a cl
 
 ## Tech Stack
 
+
 - **Frontend**: React.js
 - **Backend**: Flask
 - **Database**: MongoDB
