@@ -31,7 +31,7 @@ function StudentHome() {
   }, []);
 
   const quizzes = user ? user["quizzes"] : [];
-  const [quizScores, setQuizScore] = fetchingData<{ scores: { [key: number]: number } }>(
+  const [quizScores, _] = fetchingData<{ scores: { [key: number]: number } }>(
     `${import.meta.env.VITE_BACKEND_URL}/getscores`,
     { quizzes: quizzes, watch: [user], credentials: true }
   );

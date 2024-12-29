@@ -57,7 +57,9 @@ function LecturerHome() {
             +
           </button>
           
-          {/* TODO: Handle creating new session for the lecturer in the database if the session doesn't exist */}
+          {/* TODO: Handle creating new session for the lecturer in the database if the session doesn't exist */
+            // Done
+          }
           {dialogOpen && (<Dialogue toggle={toggleDialog} navigate={navigate} userType={"lecturer"}/>
   )}
   

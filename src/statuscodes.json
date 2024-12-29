@@ -8,6 +8,7 @@
     "UPDATED_SCORE" : 6,
     "UPDATED_ANSWER" : 7,
     "SCORES_FETCHED" : 8,
-    "UPDATED_SESSION" : 9
+    "UPDATED_SESSION" : 9,
+    "QUESTION_ADDED" : 10
 
 }
