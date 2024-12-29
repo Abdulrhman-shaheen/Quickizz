@@ -9,6 +9,7 @@ import LecturerQuestion from "./lecturerQuestion";
 import { fetchingData } from "../utils/fetchingData";
 import Question from "./question";
 import QuestionsTransition from "./questiontransition";
+import { sessionAnswers } from "../types/sessionAnswers";
 
 function LecturerIntf() {
   const navigate = useNavigate();
@@ -65,49 +66,57 @@ function LecturerIntf() {
     fetchData();
   }, [navigate, sess_id]);
 
+  let [answers, ___] = fetchingData<sessionAnswers>(
+    `${import.meta.env.VITE_BACKEND_URL}/answers?sess_id=${sess_id}`
+  );
+
   return (
     <div>
-      <Header user={user} navigate={navigate} score = {` Quiz #${sess_id}`} />
+      <Header user={user} navigate={navigate} score={` Quiz #${sess_id}`} />
       <div className="flex flex-col items-center ">
-      <div className="p-6 w-1/2 min-w-min flex flex-col gap-3">
+        <div className="p-6 w-1/2 min-w-min flex flex-col gap-3">
+          {old_questions && old_questions.length > 0 ? (
+            old_questions.map((question) => (
+              <QuestionsTransition key={question._id}>
+                <Question
+                  question={question}
+                  score={_}
+                  setScore={__}
+                  choices={
+                    answers
+                      ? answers["answers"][question._id]
+                      : { a: 0, b: 0, c: 0, d: 0 }
+                  }
+                  key={question._id}
+                  alreadyAnswered={true}
+                />
+              </QuestionsTransition>
+            ))
+          ) : (
+            <p className="text-gray-400">No previous questions available</p>
+          )}
 
-        {old_questions && old_questions.length > 0 ? (
-          old_questions.map((question) => (
-            <QuestionsTransition key={question._id}>
-              <Question
-                question={question}
-                score={_}
-                setScore={__}
-                key={question._id}
-                alreadyAnswered={true}
-              />
-            </QuestionsTransition>
-          ))
-        ) : (
-          <p className="text-gray-400">No previous questions available</p>
-        )}
+          {questions.map((index) => (
+            <div key={index}>
+              <LecturerQuestion key={index} old={false} oldQuestion={null} />
+            </div>
+          ))}
 
-        {questions.map((index) => (
-          <div key={index}>
-            <LecturerQuestion key={index} old={false} oldQuestion={null} />
+          <div className="flex justify-between">
+            <button
+              onClick={handleNext}
+              className="bg-white hover:bg-white/15 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Next
+            </button>
+            <button
+              onClick={handleFinish}
+              className="bg-white hover:bg-white/15 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Finish
+            </button>
           </div>
-        ))}
-
-        <div className="flex justify-between">
-          <button
-            onClick={handleNext}
-            className="bg-white hover:bg-white/15 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Next
-          </button>
-          <button
-            onClick={handleFinish}
-            className="bg-white hover:bg-white/15 hover:text-white text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Finish
-          </button>
         </div>
-      </div>
       </div>
     </div>
   );

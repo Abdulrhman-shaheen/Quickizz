@@ -18,17 +18,18 @@ function Question({
 }) {
   const [selectedChoice, setSelectedChoice] = useState<string>("");
   const [submitted, setSubmited] = useState(alreadyAnswered);
+  
 
   let total_choices = 0;
   (["a", "b", "c", "d"] as const).map((choice) => {
-    total_choices += choices[choice] ? choices[choice] : 0;
+    total_choices += choices && choices[choice] ? choices[choice] : 0;
   });
 
   let percentages = { a: 0, b: 0, c: 0, d: 0 };
 
   (["a", "b", "c", "d"] as const).map((choice) => {
-    percentages[choice] = choices[choice]
-      ? Number(((choices[choice] / total_choices) * 100).toFixed(2))
+    percentages[choice] = choices && choices[choice]
+      ? Number(((choices && choices[choice] / total_choices) * 100).toFixed(2))
       : 0;
   });
 
@@ -42,7 +43,7 @@ function Question({
           key={choice}
           question={question}
           choice={choice}
-          votes={choices[choice] ? choices[choice] : 0}
+          votes={choices && choices[choice] ? choices[choice] : 0}
           percent={percentages[choice]}
           selectedChoice={selectedChoice}
           handleChoiceSelection={setSelectedChoice}
