@@ -16,9 +16,9 @@ function LecturerHome() {
     };
   
     useEffect(() => {
-      if (document.cookie == "") {
-        navigate("/");
-      }
+      // if (document.cookie == "") {
+      //   navigate("/");
+      // }
       const fetchData = async () => {
         const result = await getUser(
           `${import.meta.env.VITE_BACKEND_URL}/getuser`

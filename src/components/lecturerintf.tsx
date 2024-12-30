@@ -41,9 +41,9 @@ function LecturerIntf() {
   };
 
   useEffect(() => {
-    if (document.cookie == "") {
-      navigate("/");
-    }
+    // if (document.cookie == "") {
+    //   navigate("/");
+    // }
 
     const fetchData = async () => {
       const result = await getUser(
