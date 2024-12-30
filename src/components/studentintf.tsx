@@ -34,7 +34,7 @@ function StudentIntf() {
   );
 
   useEffect(() => {
-    const socket = io(`${import.meta.env.VITE_BACKEND_URL}`);
+    const socket = io(`${import.meta.env.VITE_BACKEND_URL}`,{transports: ['websocket'],});
     console.log("Initializing socket connection...");
 
     // Handle connection events
